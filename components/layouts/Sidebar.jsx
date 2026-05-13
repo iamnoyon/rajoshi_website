@@ -17,7 +17,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`flex flex-col border-r bg-[#042A55] transition-all duration-300 ${
+      className={`flex flex-col border-r bg-[#02162e] transition-all duration-300 ${
         collapsed ? "w-20" : "w-65"
       }`}
     >
@@ -48,7 +48,7 @@ export default function Sidebar() {
       </div>
 
       {/* Divider */}
-      <div className="border-b border-[#0E3A69]" />
+      <div className="border-b border-[#052950]" />
 
       {/* Menu */}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -89,7 +89,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       {!collapsed && (
-        <div className="border-t border-[#0E3A69] p-4">
+        <div className="border-t border-[#052950] p-4">
           <p className="text-center text-xs text-gray-400">
             © 2026 MyAdmin
           </p>

@@ -23,18 +23,12 @@ export default function AdminRootLayout({
     children,
 }) {
     return (
-        <html
-            lang="en"
-        >
-            <body>
-                <AuthProvider>
-                    <ReduxProvider>
-                        <AdminLayout>
-                            {children}
-                        </AdminLayout>
-                    </ReduxProvider>
-                </AuthProvider>
-            </body>
-        </html>
+        <AuthProvider>
+            <ReduxProvider>
+                <AdminLayout>
+                    {children}
+                </AdminLayout>
+            </ReduxProvider>
+        </AuthProvider>
     );
 }

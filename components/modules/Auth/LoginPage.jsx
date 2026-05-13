@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import {useLoginMutation} from "@/components/store/public/index";
+import { useLoginMutation } from "@/components/store/public/index";
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -13,15 +13,19 @@ export default function LoginPage() {
     const router = useRouter();
 
     // api call
-    const [Login, {data: loign}] = useLoginMutation()
+    const [Login] = useLoginMutation()
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        Login({email, password})
-        .then((res)=>{
-            router.push("/dashboard")
-        })
 
+        try {
+            const res = await Login({ email, password }).unwrap();
+            if (res?.success || res?.status_code === 200) {
+                router.replace("/dashboard");
+            }
+        } catch (err) {
+            console.log("LOGIN ERROR:", err?.data || err?.message);
+        }
     };
 
     return (

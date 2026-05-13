@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLogoutMutation } from "../store/public";
+import NextLink from "next/link"
 
 export default function Topbar() {
     const state = useSelector(state => state?.user)
@@ -14,6 +15,18 @@ export default function Topbar() {
 
     // api
     const [Logout] = useLogoutMutation()
+    const handleLogout = ()=>{
+        Logout()
+        .unwrap()
+        .then((res)=>{
+            if(res?.status_code == 200 || success == true){
+                window.location.reload();
+            }
+        })
+        .catch(err=>{
+            console.log(err.message);
+        })
+    }
 
     const dropdownRef = useRef(null);
 
@@ -92,13 +105,13 @@ export default function Topbar() {
 
                             {/* Menu */}
                             <div className="p-2 flex items-center justify-between">
-                                <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 transition-all duration-200 hover:cursor-pointer hover:bg-gray-100 active:scale-[0.98]">
+                                <NextLink href="/profile" className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 transition-all duration-200 hover:cursor-pointer hover:bg-gray-100 active:scale-[0.98]">
                                     <User size={18} />
                                     <span>Profile</span>
-                                </button>
+                                </NextLink>
 
                                 <button
-                                    onClick={() => Logout()}
+                                    onClick={handleLogout}
                                     className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-red-500 transition-all duration-200 hover:cursor-pointer hover:bg-red-50 active:scale-[0.98]"
                                 >
                                     <LogOut size={18} />
