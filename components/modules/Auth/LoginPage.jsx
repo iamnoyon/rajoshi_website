@@ -3,17 +3,25 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import {useLoginMutation} from "@/components/store/public/index";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
+
+    // api call
+    const [Login, {data: loign}] = useLoginMutation()
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-        // Add your login logic here
-        setTimeout(() => setIsLoading(false), 1000);
+        Login({email, password})
+        .then((res)=>{
+            router.push("/dashboard")
+        })
+
     };
 
     return (

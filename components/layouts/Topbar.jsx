@@ -4,9 +4,15 @@
 import { Bell, ChevronDown, LogOut, Settings, User } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLogoutMutation } from "../store/public";
 
 export default function Topbar() {
+    const state = useSelector(state => state?.user)
     const [open, setOpen] = useState(false);
+
+    // api
+    const [Logout] = useLogoutMutation()
 
     const dropdownRef = useRef(null);
 
@@ -69,31 +75,33 @@ export default function Topbar() {
 
                     {/* Dropdown */}
                     {open && (
-                        <div className="absolute right-0 top-14 z-50 w-56 overflow-hidden rounded-2xl border bg-white shadow-xl">
+                        <div className="absolute -right-3 top-14 z-50 w-[92vw] max-w-64 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl sm:w-64">
+
                             {/* User Info */}
-                            <div className="border-b px-4 py-4">
-                                <p className="text-sm font-semibold text-gray-800">
-                                    Admin User
+                            <div className="border-b border-gray-100 px-4 py-4 text-center">
+                                <p className="truncate text-sm font-semibold text-gray-800">
+                                    {state?.name}
                                 </p>
-                                <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                                    <span className="text-xs text-gray-500">
-                                        admin@gmail.com
+                                <div className="mt-1 text-xs text-gray-500">
+                                    <span className="max-w-full truncate">
+                                        {state?.email}
                                     </span>
-                                    <span className="font-bold">|</span>
-                                    <span>Admin</span>
                                 </div>
                             </div>
 
                             {/* Menu */}
-                            <div className="p-2">
-                                <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:cursor-pointer">
+                            <div className="p-2 flex items-center justify-between">
+                                <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-700 transition-all duration-200 hover:cursor-pointer hover:bg-gray-100 active:scale-[0.98]">
                                     <User size={18} />
-                                    Profile
+                                    <span>Profile</span>
                                 </button>
 
-                                <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-red-500 transition hover:bg-red-50 hover:cursor-pointer">
+                                <button
+                                    onClick={() => Logout()}
+                                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-red-500 transition-all duration-200 hover:cursor-pointer hover:bg-red-50 active:scale-[0.98]"
+                                >
                                     <LogOut size={18} />
-                                    Logout
+                                    <span>Logout</span>
                                 </button>
                             </div>
                         </div>

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import AdminLayout from "@/components/layouts/AdminLayout";
 import AuthProvider from "@/components/layouts/AuthProvider";
+import ReduxProvider from "@/components/providers/ReduxProvider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -24,13 +25,14 @@ export default function AdminRootLayout({
     return (
         <html
             lang="en"
-            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         >
-            <body className="min-h-full flex flex-col">
+            <body>
                 <AuthProvider>
-                    <AdminLayout>
-                        {children}
-                    </AdminLayout>
+                    <ReduxProvider>
+                        <AdminLayout>
+                            {children}
+                        </AdminLayout>
+                    </ReduxProvider>
                 </AuthProvider>
             </body>
         </html>
