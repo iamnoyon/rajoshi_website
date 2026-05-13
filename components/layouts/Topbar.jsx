@@ -10,6 +10,7 @@ import { useLogoutMutation } from "../store/public";
 export default function Topbar() {
     const state = useSelector(state => state?.user)
     const [open, setOpen] = useState(false);
+    console.log(state);
 
     // api
     const [Logout] = useLogoutMutation()
