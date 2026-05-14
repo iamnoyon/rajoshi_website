@@ -2,9 +2,12 @@
 
 import CardLayout from '@/components/common/CardLayout'
 import React from 'react'
-import { ArrowLeft, User } from "lucide-react";
+import { User } from "lucide-react";
+import { breadcrumbList } from '@/components/layouts/breadcrumbList';
+import useBreadcrumb from '@/components/hooks/useBreadcurmb';
 
 const UserCreate = () => {
+    useBreadcrumb(breadcrumbList?.userCreate);
     return (
         <CardLayout
             title="Add User"

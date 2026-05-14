@@ -3,64 +3,42 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { menuItems } from "./menuItems";
-
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  ChevronDown,
-} from "lucide-react";
-
+import { PanelLeftClose, PanelLeftOpen, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
-
   const [collapsed, setCollapsed] = useState(false);
-  const [openMenus, setOpenMenus] = useState({});
+  const [openMenu, setOpenMenu] = useState(null);
 
-  // ✅ reusable active checker
   const isPathActive = (path) =>
     pathname === path || pathname.startsWith(path + "/");
 
-  // Toggle submenu
   const toggleMenu = (menuName) => {
-    setOpenMenus((prev) => ({
-      ...prev,
-      [menuName]: !prev[menuName],
-    }));
+    setOpenMenu((prev) => (prev === menuName ? null : menuName));
   };
 
   return (
     <aside
-      className={`flex flex-col border-r bg-[#02162e] transition-all duration-300 ${
-        collapsed ? "w-20" : "w-65"
-      }`}
+      className={`flex flex-col border-r bg-[#02162e] transition-all duration-300 ${collapsed ? "w-20" : "w-65"
+        }`}
     >
       {/* Header */}
       <div
-        className={`flex h-16 items-center ${
-          collapsed ? "justify-center px-2" : "justify-between px-6"
-        }`}
+        className={`flex h-16 items-center ${collapsed ? "justify-center px-2" : "justify-between px-6"
+          }`}
       >
         {!collapsed && (
-          <span className="text-lg font-bold text-white">
-            MyAdmin
-          </span>
+          <span className="text-lg font-bold text-white">MyAdmin</span>
         )}
-
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="rounded-lg p-2 text-white transition hover:cursor-pointer hover:text-gray-300"
         >
-          {collapsed ? (
-            <PanelLeftOpen size={20} />
-          ) : (
-            <PanelLeftClose size={20} />
-          )}
+          {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
         </button>
       </div>
 
-      {/* Divider */}
       <div className="border-b border-[#052950]" />
 
       {/* Menu */}
@@ -68,76 +46,77 @@ export default function Sidebar() {
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
+            const hasChildren = Boolean(item.children?.length);
 
-            // ✅ Parent active (includes children)
             const isActive =
               item.activePath?.some(isPathActive) ||
-              item.children?.some((child) =>
-                isPathActive(child.path)
-              );
+              item.children?.some((child) => isPathActive(child.path));
 
-            // Auto open if active OR manually opened
-            const isOpen = openMenus[item.name] || isActive;
+            const isOpen = openMenu === item.name;
 
             return (
               <li key={item.name}>
-                {/* Parent Menu */}
-                <div
-                  className={`flex items-center justify-between rounded-xl py-3 text-sm font-medium transition-all ${
-                    collapsed ? "justify-center px-2" : "px-4"
-                  } ${
-                    isActive
-                      ? "bg-[#063C76] text-white shadow-md"
-                      : "text-gray-300 hover:bg-[#063C76]"
-                  }`}
-                >
-                  {/* Left Side */}
-                  <Link
-                    href={item.path}
-                    className="flex flex-1 items-center gap-3"
+
+                {/* ── Parent: has children → button (toggle only, no nav) ── */}
+                {hasChildren ? (
+                  <button
+                    onClick={() => toggleMenu(item.name)}
+                    className={`flex w-full items-center justify-between rounded-xl py-3 text-sm font-medium transition-all hover:cursor-pointer ${collapsed ? "justify-center px-2" : "px-4"
+                      } ${isActive
+                        ? "bg-[#063C76] text-white shadow-md"
+                        : "text-gray-300 hover:bg-[#063C76]"
+                      }`}
                   >
-                    <Icon size={20} />
+                    <span className="flex items-center gap-3">
+                      <Icon size={20} />
+                      {!collapsed && <span>{item.name}</span>}
+                    </span>
 
-                    {!collapsed && <span>{item.name}</span>}
-                  </Link>
-
-                  {/* Dropdown Toggle */}
-                  {!collapsed && item.children && (
-                    <button
-                      onClick={() => toggleMenu(item.name)}
-                      className="ml-2 hover:cursor-pointer"
-                    >
+                    {!collapsed && (
                       <ChevronDown
                         size={16}
-                        className={`transition-transform duration-300 ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
+                        className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+                          }`}
                       />
-                    </button>
-                  )}
-                </div>
+                    )}
+                  </button>
 
-                {/* Child Menus */}
-                {!collapsed && item.children && isOpen && (
-                  <ul className="mt-2 ml-6 space-y-1">
+                ) : (
+
+                  /* ── Parent: no children → Link (navigates) ── */
+                  <Link
+                    href={item.path}
+                    className={`flex items-center gap-3 rounded-xl py-3 text-sm font-medium transition-all ${collapsed ? "justify-center px-2" : "px-4"
+                      } ${isActive
+                        ? "bg-[#063C76] text-white shadow-md"
+                        : "text-gray-300 hover:bg-[#063C76]"
+                      }`}
+                  >
+                    <Icon size={20} />
+                    {!collapsed && <span>{item.name}</span>}
+                  </Link>
+                )}
+
+                {/* ── Children ── */}
+                {!collapsed && hasChildren && (
+                  <ul
+                    className={`ml-6 space-y-1 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 mt-2 opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                  >
                     {item.children.map((child) => {
                       const ChildIcon = child.icon;
-
-                      // ✅ FIXED child active logic
                       const childActive = isPathActive(child.path);
 
                       return (
                         <li key={child.name}>
                           <Link
                             href={child.path}
-                            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${
-                              childActive
+                            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition ${childActive
                                 ? "bg-[#0A4D99] text-white"
                                 : "text-gray-400 hover:bg-[#063C76]"
-                            }`}
+                              }`}
                           >
                             {ChildIcon && <ChildIcon size={16} />}
-
                             <span>{child.name}</span>
                           </Link>
                         </li>
@@ -145,6 +124,7 @@ export default function Sidebar() {
                     })}
                   </ul>
                 )}
+
               </li>
             );
           })}
@@ -154,9 +134,7 @@ export default function Sidebar() {
       {/* Footer */}
       {!collapsed && (
         <div className="border-t border-[#052950] p-4">
-          <p className="text-center text-xs text-gray-400">
-            © 2026 MyAdmin
-          </p>
+          <p className="text-center text-xs text-gray-400">© 2026 MyAdmin</p>
         </div>
       )}
     </aside>

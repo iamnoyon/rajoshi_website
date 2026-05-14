@@ -7,9 +7,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLogoutMutation } from "../store/public";
 import NextLink from "next/link"
+import Breadcurmb from "../common/Breadcurmb";
 
 export default function Topbar() {
     const state = useSelector(state => state?.user)
+    const breadcurmb = useSelector(state => state?.breadcurmb);
+    console.log(breadcurmb);
     const [open, setOpen] = useState(false);
     console.log(state);
 
@@ -55,9 +58,7 @@ export default function Topbar() {
         <header className="flex h-16 items-center justify-between border-b bg-white px-6 shadow-sm">
             {/* Left */}
             <div>
-                <h1 className="text-lg font-semibold text-gray-800">
-                    Admin Dashboard
-                </h1>
+                <Breadcurmb items={breadcurmb?.items}/>
             </div>
 
             {/* Right */}
