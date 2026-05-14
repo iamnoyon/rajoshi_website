@@ -1,10 +1,14 @@
 // components/layout/menuItems.js
+
 import {
   LayoutDashboard,
   Users,
   ShoppingCart,
   Settings,
   Package,
+  UserPlus,
+  List,
+  Plus,
 } from "lucide-react";
 
 export const menuItems = [
@@ -14,24 +18,59 @@ export const menuItems = [
     path: "/dashboard",
     activePath: ["/dashboard"],
   },
+
   {
-    name: "Users",
+    name: "User Management",
     icon: Users,
-    path: "/admin/users",
-    activePath: ["/admin/users", "/admin/users/create"],
+    path: "#",
+    activePath: ["/user-management/"],
+
+    children: [
+      {
+        name: "Users",
+        path: "/user-management/users",
+        icon: List,
+        activePath: ["/user-management/users/"],
+      },
+      {
+        name: "Role",
+        path: "/user-management/roles",
+        icon: UserPlus,
+      },
+    ],
   },
+
   {
     name: "Orders",
     icon: ShoppingCart,
     path: "/admin/orders",
     activePath: ["/admin/orders"],
   },
+
   {
     name: "Products",
     icon: Package,
     path: "/admin/products",
-    activePath: ["/admin/products", "/admin/products/edit"],
+    activePath: [
+      "/admin/products",
+      "/admin/products/create",
+      "/admin/products/edit",
+    ],
+
+    children: [
+      {
+        name: "All Products",
+        path: "/admin/products",
+        icon: List,
+      },
+      {
+        name: "Add Product",
+        path: "/admin/products/create",
+        icon: Plus,
+      },
+    ],
   },
+
   {
     name: "Settings",
     icon: Settings,
