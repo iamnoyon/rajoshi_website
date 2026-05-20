@@ -1,6 +1,6 @@
 "use client";
 
-import { useChangePasswordMutation } from "@/components/store/auth";
+import { useChangePasswordMutation, useUpdateProfileMutation, useUploadProfilePhotoMutation } from "@/components/store/auth";
 import {
     User,
     Mail,
@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 
 export default function ProfilePage() {
     const user = useSelector((state) => state?.user);
+    const [fileUrl, setFileUrl] = useState(null);
 
     const fileRef = useRef(null);
     const [preview, setPreview] = useState(null);
@@ -35,6 +36,8 @@ export default function ProfilePage() {
 
     // api
     const [ChangePassword] = useChangePasswordMutation()
+    const [UploadProfilePhoto] = useUploadProfilePhotoMutation()
+    const [UpdateProfile] = useUpdateProfileMutation()
 
     const handleImageChange = (e) => {
         const selectedFile = e.target.files?.[0];
@@ -42,10 +45,27 @@ export default function ProfilePage() {
 
         setFile(selectedFile);
         setPreview(URL.createObjectURL(selectedFile));
+        try {
+            // Here you can also call the UpdateProfile API to upload the new profile picture
+            const formData = new FormData();
+            formData.append("attachment", selectedFile);
+            UploadProfilePhoto(formData)
+            .unwrap()
+            .then(res => {
+                if (res?.success == true || res?.status_code == 200) {
+                    setFileUrl(res?.filename);
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+        }catch (err) {
+            console.log(err.message);
+        }
     };
 
     const handleUpdate = () => {
-        console.log("upload");
+        UpdateProfile({fileName: fileUrl})
     };
 
     const handleChangePassword = (e) => {

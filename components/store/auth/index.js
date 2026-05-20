@@ -8,9 +8,23 @@ export const authSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: data
             })
+        }),
+        uploadProfilePhoto: builder.mutation({
+            query: (data)=>({
+                url: '/attachment/upload',
+                method: 'POST',
+                body: data
+            })
+        }),
+        UpdateProfile: builder.mutation({
+            query: (data)=>({
+                url: '/update-profile-photo',
+                method: 'PUT',
+                body: data
+            })
         })
     }),
     overrideExisting: true
 });
 
-export const {useChangePasswordMutation} = authSlice;
+export const {useChangePasswordMutation, useUploadProfilePhotoMutation, useUpdateProfileMutation} = authSlice;
