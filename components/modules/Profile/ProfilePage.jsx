@@ -9,6 +9,8 @@ import {
     Calendar,
     MapPin,
     Lock,
+    Eye,
+    EyeOff,
 } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -24,6 +26,11 @@ export default function ProfilePage() {
     const [password, setPassword] = useState({
         new_password: "",
         confirm_password: "",
+    });
+
+    const [showPassword, setShowPassword] = useState({
+        new_password: false,
+        confirm_password: false,
     });
 
     // api
@@ -43,19 +50,22 @@ export default function ProfilePage() {
 
     const handleChangePassword = (e) => {
         e.preventDefault();
-        if(password?.new_password === password.confirm_password){
-            ChangePassword(password)
-            .unwrap()
-            .then(res=>{
-                if(res?.success == true || res?.status_code == 200){
-                    alert('Password changed.')
-                    window.location.reload()
-                }
+        if (password?.new_password === password.confirm_password) {
+            ChangePassword({
+                newPassword: password.new_password,
+                confirmPassword: password.confirm_password
             })
-            .catch(err=>{
-                console.log(err.message);
-            })
-        }else{
+                .unwrap()
+                .then(res => {
+                    if (res?.success == true || res?.status_code == 200) {
+                        alert('Password changed.')
+                        window.location.reload()
+                    }
+                })
+                .catch(err => {
+                    console.log(err.message);
+                })
+        } else {
             alert("New & Confirm password are not same")
         }
     };
@@ -183,34 +193,70 @@ export default function ProfilePage() {
                                 <label className="mb-1.5 block text-xs font-medium text-gray-500">
                                     New Password
                                 </label>
-                                <input
-                                    type="password"
-                                    value={password.new_password}
-                                    onChange={(e) =>
-                                        setPassword((prev) => ({
-                                            ...prev,
-                                            new_password: e.target.value,
-                                        }))
-                                    }
-                                    className="w-full rounded-lg border p-2 text-sm text-black"
-                                />
+                                <div className="relative flex items-center">
+                                    <input
+                                        type={showPassword.new_password ? "text" : "password"}
+                                        value={password.new_password}
+                                        onChange={(e) =>
+                                            setPassword((prev) => ({
+                                                ...prev,
+                                                new_password: e.target.value,
+                                            }))
+                                        }
+                                        className="w-full rounded-lg border p-2 pr-10 text-sm text-black"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword((prev) => ({
+                                                ...prev,
+                                                new_password: !prev.new_password,
+                                            }))
+                                        }
+                                        className="absolute right-3 text-gray-500 hover:text-gray-700"
+                                    >
+                                        {showPassword.new_password ? (
+                                            <EyeOff size={18} />
+                                        ) : (
+                                            <Eye size={18} />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
 
                             <div>
                                 <label className="mb-1.5 block text-xs font-medium text-gray-500">
                                     Confirm Password
                                 </label>
-                                <input
-                                    type="password"
-                                    value={password.confirm_password}
-                                    onChange={(e) =>
-                                        setPassword((prev) => ({
-                                            ...prev,
-                                            confirm_password: e.target.value,
-                                        }))
-                                    }
-                                    className="w-full rounded-lg border p-2 text-sm text-black"
-                                />
+                                <div className="relative flex items-center">
+                                    <input
+                                        type={showPassword.confirm_password ? "text" : "password"}
+                                        value={password.confirm_password}
+                                        onChange={(e) =>
+                                            setPassword((prev) => ({
+                                                ...prev,
+                                                confirm_password: e.target.value,
+                                            }))
+                                        }
+                                        className="w-full rounded-lg border p-2 pr-10 text-sm text-black"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setShowPassword((prev) => ({
+                                                ...prev,
+                                                confirm_password: !prev.confirm_password,
+                                            }))
+                                        }
+                                        className="absolute right-3 text-gray-500 hover:text-gray-700"
+                                    >
+                                        {showPassword.confirm_password ? (
+                                            <EyeOff size={18} />
+                                        ) : (
+                                            <Eye size={18} />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
 
                             <button
