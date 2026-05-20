@@ -66,6 +66,12 @@ export default function ProfilePage() {
 
     const handleUpdate = () => {
         UpdateProfile({fileName: fileUrl})
+        .then(res => {
+            if (res?.success == true || res?.status_code == 200) {
+                alert('Profile photo updated.')
+                window.location.reload()
+            }
+        })
     };
 
     const handleChangePassword = (e) => {
@@ -106,12 +112,13 @@ export default function ProfilePage() {
                                 onClick={() => fileRef.current.click()}
                                 className="relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-100"
                             >
-                                {preview ? (
+                                {preview || user?.profile_photo ? (
                                     <Image
-                                        src={preview}
+                                        src={preview || user?.profile_photo}
                                         alt="avatar"
                                         fill
                                         className="object-cover"
+                                        unoptimized={true}
                                     />
                                 ) : (
                                     <User size={28} />

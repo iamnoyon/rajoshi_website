@@ -14,7 +14,7 @@ export default function Topbar() {
     const breadcurmb = useSelector(state => state?.breadcurmb);
     console.log(breadcurmb);
     const [open, setOpen] = useState(false);
-    console.log(state);
+    console.log(state?.profile_photo);
 
     // api
     const [Logout] = useLogoutMutation()
@@ -80,11 +80,12 @@ export default function Topbar() {
                         {/* Avatar */}
                         <div className="hover:cursor-pointer">
                             <Image
-                                src="/profile.png"
+                                src={state?.profile_photo || "/default-avatar.png"}
                                 alt="User Avatar"
                                 width={40}
                                 height={40}
                                 className="rounded-full"
+                                unoptimized={true}
                             />
                         </div>
                     </button>
