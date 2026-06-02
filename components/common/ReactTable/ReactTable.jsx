@@ -194,7 +194,7 @@ const ReactTable = ({
                             <select
                                 id="pageSizeSelect"
                                 value={pageAndLimit?.limit ?? 10}
-                                onChange={(e) => onPageLimitChange?.({ page: 0, limit: Number(e.target.value) })}
+                                onChange={(e) => onPageLimitChange?.({ page: 1, limit: Number(e.target.value) })}
                                 className="rounded border border-[#043570] px-2 py-1 font-['DM_Sans',sans-serif] text-xs text-[#043570] focus:ring-2 focus:outline-none sm:text-[0.875rem]"
                             >
                                 {[10, 20, 30, 50].map((item) => (
@@ -210,13 +210,13 @@ const ReactTable = ({
                     {paginationOn && pageAndLimit && totalRecords !== undefined && (
                         <div className="flex items-center gap-1 sm:gap-2">
                             <div className="mr-2 text-[#043570] sm:mr-10">
-                                {pageAndLimit.page * pageAndLimit.limit + 1} {' – '}
-                                {Math.min((pageAndLimit.page + 1) * pageAndLimit.limit, totalRecords)} {' of '}
+                                {(pageAndLimit.page - 1) * pageAndLimit.limit + 1} {' – '}
+                                {Math.min(pageAndLimit.page * pageAndLimit.limit, totalRecords)} {' of '}
                                 {totalRecords}
                             </div>
                             <button
-                                onClick={() => updatePageLimit(0, pageAndLimit.limit)}
-                                disabled={pageAndLimit.page === 0}
+                                onClick={() => updatePageLimit(1, pageAndLimit.limit)}
+                                disabled={pageAndLimit.page === 1}
                                 className="text-[#043570] transition-colors hover:text-(--bbp-red) disabled:opacity-30"
                             >
                                 <ChevronFirst size={14} className="sm:h-5 sm:w-5" />
@@ -224,7 +224,7 @@ const ReactTable = ({
 
                             <button
                                 onClick={() => updatePageLimit(pageAndLimit.page - 1, pageAndLimit.limit)}
-                                disabled={pageAndLimit.page === 0}
+                                disabled={pageAndLimit.page === 1}
                                 className="text-[#043570] transition-colors hover:text-(--bbp-red) disabled:opacity-30"
                             >
                                 <ChevronLeft size={14} className="sm:h-5 sm:w-5" />
@@ -232,7 +232,7 @@ const ReactTable = ({
 
                             <button
                                 onClick={() => updatePageLimit(pageAndLimit.page + 1, pageAndLimit.limit)}
-                                disabled={(pageAndLimit.page + 1) * pageAndLimit.limit >= totalRecords}
+                                disabled={pageAndLimit.page * pageAndLimit.limit >= totalRecords}
                                 className="text-[#043570] transition-colors hover:text-(--bbp-red) disabled:opacity-30"
                             >
                                 <ChevronRight size={14} className="sm:h-5 sm:w-5" />
@@ -241,11 +241,11 @@ const ReactTable = ({
                             <button
                                 onClick={() =>
                                     updatePageLimit(
-                                        Math.ceil(totalRecords / pageAndLimit.limit) - 1,
+                                        Math.ceil(totalRecords / pageAndLimit.limit),
                                         pageAndLimit.limit
                                     )
                                 }
-                                disabled={(pageAndLimit.page + 1) * pageAndLimit.limit >= totalRecords}
+                                disabled={pageAndLimit.page * pageAndLimit.limit >= totalRecords}
                                 className="text-[#043570] transition-colors hover:text-(--bbp-red) disabled:opacity-30"
                             >
                                 <ChevronLast size={14} className="sm:h-5 sm:w-5" />
