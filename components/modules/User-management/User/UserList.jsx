@@ -11,6 +11,7 @@ import ReactTable from '@/components/common/ReactTable/ReactTable';
 import { createColumnHelper } from '@tanstack/react-table';
 import Link from 'next/link';
 import TableSkeleton from '@/components/common/ReactTable/TableSkeleton';
+import ThreeDotMenu from '@/components/common/ThreeDotMenu';
 
 const columnHelper = createColumnHelper();
 
@@ -19,28 +20,29 @@ const UserList = () => {
     useBreadcrumb(breadcrumbList?.userList);
     const [pageAndLimit, setPageAndLimit] = useState({ page: 1, limit: 10 });
     const [searchQuery, setSearchQuery] = useState('');
-    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    // Action handlers
+    const handleApprove = (id) =>{
+        console.log('Approve user with ID:', id);
+
+    }
+    const handleSuspend = (id) =>{
+        console.log('Suspend user with ID:', id);
+    }
+    const handleInvitation = (id) =>{
+        console.log('Send invitation to user with ID:', id);
+    }
 
     // API
     const [triggerList, { data: userData, isLoading, isFetching }] = useLazyGetUserListQuery();
-
-    // Debounce search
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearch(searchQuery);
-            setPageAndLimit((prev) => ({ ...prev, page: 1 }));
-        }, 500);
-        return () => clearTimeout(timer);
-    }, [searchQuery]);
 
     // Trigger API call
     useEffect(() => {
         triggerList({
             page: pageAndLimit.page,
             limit: pageAndLimit.limit,
-            search: debouncedSearch || undefined,
         });
-    }, [pageAndLimit, debouncedSearch]);
+    }, [pageAndLimit]);
 
     // Columns definition
     const columns = useMemo(
@@ -109,18 +111,35 @@ const UserList = () => {
                 columnHelper.display({
                     id: 'actions',
                     header: () => 'Actions',
-                    cell: (info) => (
-                        <div className="flex gap-2">
-                            <Link href={`/user-management/users/edit/${info.row.original._id}`}>
-                                <button className="text-[#043570] hover:text-[#8b0000] transition-colors p-1">
-                                    <Edit size={18} />
-                                </button>
-                            </Link>
-                            <button className="text-[#ef4444] hover:text-[#8b0000] transition-colors p-1">
-                                <Trash2 size={18} />
-                            </button>
-                        </div>
-                    ),
+                    cell: (info) => {
+                        const user = info.row.original;
+                        const isActive = user.status === 'active';
+                        const isPending = user.status === 'pending';
+
+                        return (
+                            <ThreeDotMenu
+                                object={user}
+                                actions={[
+                                    {
+                                        label: 'Approve',
+                                        onClick: () => handleApprove(info?.row?.original?.id),
+                                        isDisabled: isActive,
+                                    },
+                                    {
+                                        label: 'Suspend',
+                                        onClick: () => handleSuspend(info?.row?.original?.id),
+                                        isDisabled: isPending,
+                                    },
+                                    {
+                                        label: 'Invitation',
+                                        onClick: () => handleInvitation(info?.row?.original?.id),
+                                        isDisabled: isActive || isPending,
+                                    },
+                                ]}
+                                isDisabled={false}
+                            />
+                        );
+                    },
                 }),
             ],
         []
