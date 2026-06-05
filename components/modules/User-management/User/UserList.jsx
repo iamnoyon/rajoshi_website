@@ -119,9 +119,6 @@ const UserList = () => {
                     header: () => 'Actions',
                     cell: (info) => {
                         const user = info.row.original;
-                        const isActive = user.status === 'approved';
-                        const isPending = user.status === 'pending';
-                        const isSuspended = user.status === 'suspended';
 
                         return (
                             <ThreeDotMenu
@@ -130,17 +127,17 @@ const UserList = () => {
                                     {
                                         label: 'Approve',
                                         onClick: () => handleStatusUpdate(info?.row?.original?.id, 'approved'),
-                                        isDisabled: isActive || isSuspended,
+                                        isDisabled: user?.status === "approved" || user?.status === "suspended",
                                     },
                                     {
                                         label: 'Suspend',
                                         onClick: () => handleStatusUpdate(info?.row?.original?.id, 'suspended'),
-                                        isDisabled: isSuspended || isPending,
+                                        isDisabled: user?.status === "pending" || user?.status === "suspended",
                                     },
                                     {
                                         label: 'Invitation',
-                                        onClick: () => handleInvitation(info?.row?.original?.id,),
-                                        isDisabled: isActive || isPending,
+                                        onClick: () => handleStatusUpdate(info?.row?.original?.id, "invitation"),
+                                        isDisabled: user?.status === "approved" || user?.status === "pending",
                                     },
                                 ]}
                                 isDisabled={false}
