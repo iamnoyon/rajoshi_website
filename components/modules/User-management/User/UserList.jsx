@@ -102,9 +102,9 @@ const UserList = () => {
                     cell: (info) => {
                         const status = info.getValue();
                         let bgColor = 'bg-gray-500';
-                        if (status === 'active') bgColor = 'bg-[#16A34A]';
+                        if (status === 'approved') bgColor = 'bg-[#16A34A]';
                         if (status === 'pending') bgColor = 'bg-[#F59E0B]';
-                        if (status === 'inactive') bgColor = 'bg-[#EF4444]';
+                        if (status === 'suspended') bgColor = 'bg-[#EF4444]';
 
                         return (
                             <span className={`inline-block rounded-full px-3 py-1 text-[0.875rem] font-medium text-white ${bgColor}`}>
@@ -119,8 +119,9 @@ const UserList = () => {
                     header: () => 'Actions',
                     cell: (info) => {
                         const user = info.row.original;
-                        const isActive = user.status === 'active';
+                        const isActive = user.status === 'approved';
                         const isPending = user.status === 'pending';
+                        const isSuspended = user.status === 'suspended';
 
                         return (
                             <ThreeDotMenu
@@ -129,12 +130,12 @@ const UserList = () => {
                                     {
                                         label: 'Approve',
                                         onClick: () => handleStatusUpdate(info?.row?.original?.id, 'approved'),
-                                        isDisabled: isActive,
+                                        isDisabled: isActive || isSuspended,
                                     },
                                     {
                                         label: 'Suspend',
                                         onClick: () => handleStatusUpdate(info?.row?.original?.id, 'suspended'),
-                                        isDisabled: isPending,
+                                        isDisabled: isSuspended || isPending,
                                     },
                                     {
                                         label: 'Invitation',
