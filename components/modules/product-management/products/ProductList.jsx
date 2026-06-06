@@ -17,7 +17,7 @@ const columnHelper = createColumnHelper();
 
 
 const ProductList = () => {
-    useBreadcrumb(breadcrumbList?.userList);
+    useBreadcrumb(breadcrumbList?.productList);
     const [pageAndLimit, setPageAndLimit] = useState({ page: 1, limit: 10 });
     const [searchQuery, setSearchQuery] = useState('');
     const {successToaster} = useToaster()

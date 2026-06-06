@@ -13,6 +13,7 @@ import {
 import { FaChrome } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import { MdFormatListBulletedAdd } from "react-icons/md";
+import { MdCategory } from "react-icons/md";
 
 export const menuItems = [
   {
@@ -57,6 +58,11 @@ export const menuItems = [
     activePath: ["/product-management/"],
 
     children: [
+      {
+        name: "Categories",
+        path: "/product-management/categories",
+        icon: MdCategory,
+      },
       {
         name: "Products",
         path: "/product-management/products",
