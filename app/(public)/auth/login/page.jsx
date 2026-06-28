@@ -22,7 +22,11 @@ export default function LoginPage() {
       .then((res) => {
         if (res?.success) {
           successToaster(res?.message || "Login successful!");
-          router.replace("/dashboard");
+          if(res?.data?.user?.role === 'admin'){
+            router.replace("/dashboard");
+          }else{
+            router.replace('/account')
+          }
         }
       })
       .catch((err) => {

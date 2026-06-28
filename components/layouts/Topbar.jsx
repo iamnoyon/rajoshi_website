@@ -22,8 +22,7 @@ export default function Topbar() {
         Logout()
             .unwrap()
             .then((res) => {
-                if (res?.status_code == 200 || success == true) {
-                    setOpen(false);
+                if (res?.success == true) {
                     window.location.reload();
                 }
             })

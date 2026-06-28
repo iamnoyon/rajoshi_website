@@ -11,6 +11,7 @@ import {
   CreditCard,
   Bell,
 } from "lucide-react";
+import { useLogoutMutation } from "@/store/public";
 
 const accountLinks = [
   { name: "Profile", href: "/account", icon: User },
@@ -23,6 +24,19 @@ const accountLinks = [
 
 export default function AccountLayout({ children }) {
   const pathname = usePathname();
+  const [Logout] = useLogoutMutation()
+  const handleLogout = () => {
+        Logout()
+            .unwrap()
+            .then((res) => {
+                if (res?.success == true) {
+                    window.location.reload();
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
+    }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -63,7 +77,7 @@ export default function AccountLayout({ children }) {
                   {link.name}
                 </Link>
               ))}
-              <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-colors">
+              <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-colors" onClick={handleLogout}>
                 <LogOut size={18} />
                 Sign Out
               </button>
