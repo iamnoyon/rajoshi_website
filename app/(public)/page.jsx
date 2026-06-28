@@ -12,8 +12,8 @@ export default function HomePage() {
       <Features />
       <Categories />
       <FeaturedProducts />
-      <BestSellers />
       <CTABanner />
+      <BestSellers />
     </div>
   );
 }

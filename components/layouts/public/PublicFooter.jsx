@@ -39,33 +39,6 @@ const footerLinks = {
 export default function PublicFooter() {
   return (
     <footer className="bg-[#042A55] text-white">
-      {/* Newsletter */}
-      <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-lg font-semibold">Stay in the loop</h3>
-              <p className="text-white/70 text-sm">
-                Subscribe to our newsletter for the latest deals and new arrivals.
-              </p>
-            </div>
-            <form className="flex w-full md:w-auto gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 md:w-72 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm"
-              />
-              <button
-                type="submit"
-                className="px-6 py-2.5 bg-white text-[#042A55] rounded-lg font-medium text-sm hover:bg-gray-100 transition-colors"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-
       {/* Links Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
