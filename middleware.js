@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 
-export function proxy(request) {
+export function middleware(request) {
   const accessToken = request.cookies.get("accessToken");
-
-  const isAuthenticated = accessToken;
+  const isAuthenticated = !!accessToken;
 
   const isProtectedRoute =
-    request.nextUrl.pathname.startsWith("/");
+    request.nextUrl.pathname.startsWith("/account");
 
   if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(
-      new URL("/", request.url)
+      new URL("/auth/login", request.url)
     );
   }
 
@@ -19,7 +18,6 @@ export function proxy(request) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/profile/:path*"
-],
+    "/account/:path*",
+  ],
 };

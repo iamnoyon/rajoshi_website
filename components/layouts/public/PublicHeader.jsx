@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import WishlistDrawer from "@/components/common/WishlistDrawer";
 import {
   Search,
   ShoppingBag,
@@ -14,7 +15,6 @@ import {
 } from "lucide-react";
 
 const navLinks = [
-  { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },
   { name: "Categories", href: "/shop?category=all" },
   { name: "About", href: "/about" },
@@ -24,10 +24,11 @@ const navLinks = [
 export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Top Bar */}
       <div className="bg-[#042A55] text-white text-xs">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
@@ -101,8 +102,8 @@ export default function PublicHeader() {
               <Search size={20} />
               <span className="text-[10px]">Search</span>
             </button>
-            <Link
-              href="/account/wishlist"
+            <button
+              onClick={() => setWishlistOpen(true)}
               className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] rounded-lg relative hidden sm:flex"
             >
               <Heart size={20} className="fill-red-500 text-red-500" />
@@ -110,7 +111,7 @@ export default function PublicHeader() {
               <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                 3
               </span>
-            </Link>
+            </button>
             <Link
               href="/account"
               className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] rounded-lg hidden sm:flex"
@@ -190,6 +191,9 @@ export default function PublicHeader() {
           </nav>
         </div>
       )}
+
+      {/* Wishlist Drawer */}
+      <WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} />
     </header>
   );
 }

@@ -7,7 +7,6 @@ import {
   Package,
   Heart,
   MapPin,
-  Settings,
   LogOut,
   CreditCard,
   Bell,
