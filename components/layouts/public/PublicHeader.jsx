@@ -13,6 +13,7 @@ import {
   Heart,
   Briefcase,
 } from "lucide-react";
+import Image from "next/image";
 
 const navLinks = [
   { name: "Shop", href: "/shop" },
@@ -57,9 +58,15 @@ export default function PublicHeader() {
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <h1 className="text-xl font-bold text-[#042A55]">
+            {/* <h1 className="text-xl font-bold text-[#042A55]">
               EcommerceStore
-            </h1>
+            </h1> */}
+            <Image
+            src='/asdf.png'
+            alt="logo"
+            width={100}
+            height={80}
+            />
           </Link>
 
           {/* Desktop Navigation */}
