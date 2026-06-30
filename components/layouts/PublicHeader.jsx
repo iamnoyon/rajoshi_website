@@ -66,6 +66,7 @@ export default function PublicHeader() {
             alt="logo"
             width={100}
             height={80}
+            style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
 
