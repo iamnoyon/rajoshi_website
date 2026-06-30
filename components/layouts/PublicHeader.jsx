@@ -157,40 +157,42 @@ export default function PublicHeader() {
       </div>
 
       {/* Mobile Navigation */}
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white">
-          <nav className="max-w-7xl mx-auto px-4 py-3 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === link.href
-                    ? "bg-[#042A55] text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <div className="pt-2 border-t border-gray-200 mt-2">
-              <Link
-                href="/auth/login"
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100"
-              >
-                Login
-              </Link>
-              <Link
-                href="/auth/register"
-                className="block px-3 py-2 rounded-lg text-sm font-medium text-[#042A55] hover:bg-blue-50"
-              >
-                Register
-              </Link>
-            </div>
-          </nav>
-        </div>
-      )}
+      <div
+        className={`lg:hidden border-t border-[#042A55]/10 bg-[#042A55] overflow-hidden transition-all duration-300 ease-in-out ${
+          mobileOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <nav className="max-w-7xl mx-auto px-4 py-3 space-y-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === link.href
+                  ? "bg-white/20 text-white"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+          <div className="pt-2 border-t border-white/20 mt-2">
+            <Link
+              href="/auth/login"
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white"
+            >
+              Login
+            </Link>
+            <Link
+              href="/auth/register"
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-white hover:bg-white/20"
+            >
+              Register
+            </Link>
+          </div>
+        </nav>
+      </div>
 
       {/* Wishlist Drawer */}
       <WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} />
