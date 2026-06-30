@@ -1,6 +1,6 @@
 import { apiSlice } from "../apiSlice";
 
-const publicApiSlice = apiSlice.injectEndpoints({
+const authSlice = apiSlice.injectEndpoints({
     endpoints: (builder)=>({
         login: builder.mutation({
             query: (data)=>({
@@ -25,4 +25,4 @@ const publicApiSlice = apiSlice.injectEndpoints({
     overrideExisting: true
 });
 
-export const {useLoginMutation, useProfileQuery, useLogoutMutation} = publicApiSlice
+export const {useLoginMutation, useProfileQuery, useLogoutMutation} = authSlice
