@@ -1,4 +1,4 @@
-import PublicLayout from "@/components/layouts/public/PublicLayout";
+import PublicLayout from "@/components/layouts/PublicLayout";
 import AccountGuard from "@/components/providers/AccountGuard";
 
 export const metadata = {

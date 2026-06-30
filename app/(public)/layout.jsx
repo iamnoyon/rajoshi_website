@@ -1,4 +1,4 @@
-import PublicLayout from "@/components/layouts/public/PublicLayout";
+import PublicLayout from "@/components/layouts/PublicLayout";
 
 export const metadata = {
   title: "EcommerceStore - Shop the Best Products Online",
