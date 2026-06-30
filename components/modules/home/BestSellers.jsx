@@ -12,7 +12,7 @@ export default function BestSellers() {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12 bg-white">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Best Sellers</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">Best Sellers</h2>
         <Link
           href="/shop?sort=bestselling"
           className="text-sm font-medium text-[#042A55] hover:underline flex items-center gap-1"

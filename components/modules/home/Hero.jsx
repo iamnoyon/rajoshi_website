@@ -10,25 +10,25 @@ export default function Hero() {
             <span className="inline-block bg-white/10 text-sm px-4 py-1.5 rounded-full mb-4">
               New Season Collection
             </span>
-            <h1 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+            <h1 className="text-2xl md:text-4xl font-bold leading-tight mb-4">
               Discover the
               <span className="block text-yellow-300">Best Deals</span>
               Online
             </h1>
-            <p className="text-white/80 text-lg mb-6 max-w-md">
+            <p className="text-white/80 text-sm md:text-lg mb-6 max-w-md">
               Shop the latest trends with exclusive discounts. Quality products
               delivered to your doorstep.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 bg-white text-[#042A55] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-2 bg-white text-[#042A55] px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
               >
-                Shop Now <ArrowRight size={18} />
+                Shop Now <ArrowRight size={16} />
               </Link>
               <Link
                 href="/shop?sort=newest"
-                className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
+                className="inline-flex items-center gap-2 border border-white/30 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors text-sm md:text-base"
               >
                 View Collections
               </Link>
