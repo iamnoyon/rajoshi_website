@@ -35,8 +35,8 @@ export default function Hero() {
             </div>
           </div>
           <div className="hidden md:flex justify-center">
-            <div className="w-60 h-60 bg-white/10 rounded-full flex items-center justify-center">
-              <div className="w-44 h-44 bg-white/10 rounded-full flex items-center justify-center">
+            <div className="w-48 h-48 bg-white/10 rounded-full flex items-center justify-center">
+              <div className="w-36 h-36 bg-white/10 rounded-full flex items-center justify-center">
                 <span className="text-5xl">&#x1F6CD;</span>
               </div>
             </div>
