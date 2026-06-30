@@ -21,12 +21,21 @@ export default function CTABanner() {
             </Link>
           </div>
           <div className="hidden md:flex justify-center">
-            <div className="w-48 h-48 bg-white/10 rounded-full flex items-center justify-center">
-              <div className="w-36 h-36 bg-white/10 rounded-full flex items-center justify-center">
+            <div className="w-42 h-42 bg-white/10 rounded-full flex items-center justify-center animate-breath">
+              <div className="w-30 h-30 bg-white/[0.15] rounded-full flex items-center justify-center">
                 <span className="text-5xl">&#x1F6CD;</span>
               </div>
             </div>
           </div>
+          <style>{`
+            @keyframes breath {
+              0%, 100% { transform: scale(1); opacity: 1; }
+              50% { transform: scale(1.08); opacity: 0.85; }
+            }
+            .animate-breath {
+              animation: breath 3s ease-in-out infinite;
+            }
+          `}</style>
         </div>
       </div>
     </section>
