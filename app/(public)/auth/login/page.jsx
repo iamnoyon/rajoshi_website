@@ -22,7 +22,9 @@ export default function LoginPage() {
       .then((res) => {
         if (res?.success) {
           successToaster(res?.message || "Login successful!");
-          router.replace('/account');
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get("redirect") || "/account";
+          router.replace(redirect);
         }
       })
       .catch((err) => {
