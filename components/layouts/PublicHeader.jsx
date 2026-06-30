@@ -61,7 +61,7 @@ export default function PublicHeader() {
               EcommerceStore
             </h1> */}
             <Image
-            src='/asdf.png'
+            src='/asfdf.png'
             alt="logo"
             width={100}
             height={80}
@@ -111,7 +111,7 @@ export default function PublicHeader() {
             </button>
             <button
               onClick={() => setWishlistOpen(true)}
-              className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] rounded-lg relative hidden sm:flex"
+              className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] hover:cursor-pointer rounded-lg relative hidden sm:flex"
             >
               <Heart size={20} className="fill-red-500 text-red-500" />
               <span className="text-[10px]">Wishlist</span>
