@@ -62,7 +62,7 @@ export default function PublicHeader() {
               EcommerceStore
             </h1> */}
             <Image
-            src='/asfdf.png'
+            src='/asdf.png'
             alt="logo"
             width={100}
             height={80}

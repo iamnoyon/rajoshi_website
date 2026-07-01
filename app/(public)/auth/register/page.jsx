@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Gift, Package, Heart } from "lucide-react";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -13,47 +13,14 @@ export default function RegisterPage() {
     confirmPassword: "",
   });
   const [agreeTerms, setAgreeTerms] = useState(false);
-
+  const isLoading = false; // Replace with actual loading state when implementing API call
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   return (
     <div className="min-h-[85vh] flex">
-      {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#042A55] to-[#063C76] relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
-          <h1 className="text-4xl font-bold mb-4">EcommerceStore</h1>
-          <p className="text-white/80 text-lg mb-8 max-w-md">
-            Join thousands of happy customers. Create an account and start shopping today.
-          </p>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x1F389;</span>
-              </div>
-              <span className="text-white/80">Exclusive member discounts</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x1F4E6;</span>
-              </div>
-              <span className="text-white/80">Track orders easily</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x2764;</span>
-              </div>
-              <span className="text-white/80">Save favorites to wishlist</span>
-            </div>
-          </div>
-        </div>
-        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full" />
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/5 rounded-full" />
-      </div>
-
-      {/* Right Side - Form */}
+      {/* Left Side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="mb-8">
@@ -172,13 +139,12 @@ export default function RegisterPage() {
                 </Link>
               </span>
             </label>
-
-            <button
+             <button
               type="submit"
-              disabled={!agreeTerms}
-              className="w-full bg-[#042A55] hover:bg-[#063C76] disabled:bg-blue-400 text-white font-semibold py-2.5 rounded-lg transition-colors"
+              disabled={!agreeTerms || isLoading}
+              className="w-full bg-[#042A55] hover:bg-[#063C76] disabled:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors"
             >
-              Create Account
+              {isLoading ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
@@ -192,6 +158,39 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
+      </div>
+
+      {/* Right Side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#042A55] to-[#063C76] relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
+          <h1 className="text-4xl font-bold mb-4">EcommerceStore</h1>
+          <p className="text-white/80 text-lg mb-8 max-w-md">
+            Join thousands of happy customers. Create an account and start shopping today.
+          </p>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                <Gift size={20} className="text-white" />
+              </div>
+              <span className="text-white/80">Exclusive member discounts</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                <Package size={20} className="text-white" />
+              </div>
+              <span className="text-white/80">Track orders easily</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                <Heart size={20} className="text-white" />
+              </div>
+              <span className="text-white/80">Save favorites to wishlist</span>
+            </div>
+          </div>
+        </div>
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full" />
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/5 rounded-full" />
       </div>
     </div>
   );

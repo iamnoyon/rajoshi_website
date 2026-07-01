@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const privateRoutes = ["/account", "/checkout"];
 
 export function proxy(request) {
-  const accessToken = request.cookies.get("access_token")?.value;
+  const accessToken = request.cookies.get("access_token");
   const path = request.nextUrl.pathname;
 
   const isPrivateRoute = privateRoutes.some((route) => path.startsWith(route));

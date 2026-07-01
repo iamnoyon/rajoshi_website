@@ -1,20 +1,38 @@
 "use client";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useProfileQuery } from "@/store/public/auth";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/store/user";
 
 export default function AccountGuard({ children }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const isAuthenticated = !!user?._id;
+  const isAuthenticated = !!user?.id;
+
+  const { data: profileData, isLoading, error } = useProfileQuery();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+    if (profileData?.success && profileData?.data) {
+      dispatch(setUser(profileData.data));
     }
-  }, [isAuthenticated, router, pathname]);
+  }, [profileData, dispatch]);
+
+  useEffect(() => {
+    if (error?.status === 401 || (error && !isLoading)) {
+      router.replace("/auth/login");
+    }
+  }, [error, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#042A55]" />
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return null;

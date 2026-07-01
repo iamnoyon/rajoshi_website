@@ -1,15 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Save } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function AccountPage() {
+  const user = useSelector((state) => state.user);
   const [form, setForm] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    phone: "+1 (555) 123-4567",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   });
+
+  useEffect(() => {
+    if (user) {
+      const nameParts = (user.name || "").split(" ");
+      setForm({
+        firstName: nameParts[0] || "",
+        lastName: nameParts.slice(1).join(" ") || "",
+        email: user.email || "",
+        phone: user.phone || "",
+      });
+    }
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

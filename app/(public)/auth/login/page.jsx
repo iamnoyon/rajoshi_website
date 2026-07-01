@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useLoginMutation } from "@/store/public/index";
 import { useRouter } from "next/navigation";
 import useToaster from "@/components/hooks/useToaster";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ShoppingCart, Package, Shield } from "lucide-react";
+import { useLoginMutation } from "@/store/public/auth";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -45,19 +45,19 @@ export default function LoginPage() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x1F6D2;</span>
+                <ShoppingCart size={20} className="text-white" />
               </div>
               <span className="text-white/80">Wide range of products</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x1F4E6;</span>
+                <Package size={20} className="text-white" />
               </div>
               <span className="text-white/80">Free shipping on orders over $50</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-lg">&#x1F512;</span>
+                <Shield size={20} className="text-white" />
               </div>
               <span className="text-white/80">Secure checkout</span>
             </div>
