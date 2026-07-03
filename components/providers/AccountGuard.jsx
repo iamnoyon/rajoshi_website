@@ -15,16 +15,14 @@ export default function AccountGuard({ children }) {
   const { data: profileData, isLoading, error } = useProfileQuery();
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (profileData?.success && profileData?.data) {
       dispatch(setUser(profileData.data));
-    }
-  }, [profileData, dispatch]);
-
-  useEffect(() => {
-    if (error?.status === 401 || (error && !isLoading)) {
+    } else if (error || !profileData?.success) {
       router.replace("/auth/login");
     }
-  }, [error, isLoading, router]);
+  }, [profileData, isLoading, error, dispatch, router]);
 
   if (isLoading) {
     return (

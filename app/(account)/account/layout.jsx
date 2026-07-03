@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -10,15 +11,17 @@ import {
   LogOut,
   CreditCard,
   Bell,
+  ShoppingBag
 } from "lucide-react";
 import { useLogoutMutation } from "@/store/public/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "@/store/user";
+import { getWishlistCount, onWishlistUpdate } from "@/utils/wishlist";
 
-const accountLinks = [
+const baseLinks = [
   { name: "Profile", href: "/account", icon: User },
+  { name: "Cart", href: "/cart", icon: ShoppingBag },
   { name: "Orders", href: "/account/orders", icon: Package },
-  { name: "Wishlist", href: "/account/wishlist", icon: Heart },
   { name: "Addresses", href: "/account/addresses", icon: MapPin },
   { name: "Payment Methods", href: "/account/payment", icon: CreditCard },
   { name: "Notifications", href: "/account/notifications", icon: Bell },
@@ -30,6 +33,12 @@ export default function AccountLayout({ children }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [Logout] = useLogoutMutation();
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    setWishlistCount(getWishlistCount());
+    return onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+  }, []);
 
   const userName = user?.name || "User";
   const userEmail = user?.email || "";
@@ -53,6 +62,16 @@ export default function AccountLayout({ children }) {
         console.log(err.message);
       });
   };
+
+  const accountLinks = [
+    ...baseLinks,
+    {
+      name: "Wishlist",
+      href: "/account/wishlist",
+      icon: Heart,
+      count: wishlistCount,
+    },
+  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -89,8 +108,22 @@ export default function AccountLayout({ children }) {
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
-                  <link.icon size={18} />
+                  <link.icon
+                    size={18}
+                    className={link.name === "Wishlist" && wishlistCount > 0 ? "fill-red-500 text-red-500" : ""}
+                  />
                   {link.name}
+                  {link.name === "Wishlist" && wishlistCount > 0 && (
+                    <span
+                      className={`ml-auto text-xs font-medium px-1.5 py-0.5 rounded-full ${
+                        pathname === link.href
+                          ? "bg-white/20 text-white"
+                          : "bg-red-100 text-red-600"
+                      }`}
+                    >
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
               ))}
               <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-colors" onClick={handleLogout}>

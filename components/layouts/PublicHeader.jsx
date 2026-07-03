@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import WishlistDrawer from "@/components/common/WishlistDrawer";
@@ -13,6 +13,7 @@ import {
   Heart,
 } from "lucide-react";
 import Image from "next/image";
+import { getWishlistCount, onWishlistUpdate } from "@/utils/wishlist";
 
 const navLinks = [
   { name: "Shop", href: "/shop" },
@@ -26,7 +27,13 @@ export default function PublicHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setWishlistCount(getWishlistCount());
+    return onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
@@ -114,11 +121,13 @@ export default function PublicHeader() {
               onClick={() => setWishlistOpen(true)}
               className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] hover:cursor-pointer rounded-lg relative hidden sm:flex"
             >
-              <Heart size={20} className="fill-red-500 text-red-500" />
+              <Heart size={20} className={wishlistCount > 0 ? "fill-red-500 text-red-500" : ""} />
               <span className="text-[10px]">Wishlist</span>
-              <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                3
-              </span>
+              {wishlistCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {wishlistCount}
+                </span>
+              )}
             </button>
             <Link
               href="/account"

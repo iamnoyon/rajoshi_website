@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   SlidersHorizontal,
@@ -13,9 +13,11 @@ import {
   ChevronsRight,
   X,
   Star,
+  Heart,
   Filter,
 } from "lucide-react";
 import products from "@/data/products.json";
+import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
 
 const sortOptions = [
   { label: "Featured", value: "featured" },
@@ -50,7 +52,18 @@ export default function ShopPage() {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [wishlist, setWishlist] = useState([]);
   const productsPerPage = 8;
+
+  useEffect(() => {
+    setWishlist(getWishlistIds());
+    return onWishlistUpdate(() => setWishlist(getWishlistIds()));
+  }, []);
+
+  const handleToggleWishlist = useCallback((id) => {
+    const updated = toggleWishlistItem(id);
+    setWishlist(updated);
+  }, []);
 
   const filteredProducts = products.filter((p) => {
     if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
@@ -260,6 +273,18 @@ export default function ShopPage() {
                   className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="relative aspect-square bg-gray-100">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleToggleWishlist(product.id);
+                      }}
+                      className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+                    >
+                      <Heart
+                        size={16}
+                        className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-500"}
+                      />
+                    </button>
                     {product.badge && (
                       <span
                         className={`absolute top-2 left-2 z-10 text-xs font-semibold px-2 py-0.5 rounded ${
@@ -320,6 +345,18 @@ export default function ShopPage() {
                   className="group flex gap-4 bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow p-3"
                 >
                   <div className="w-32 h-32 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleToggleWishlist(product.id);
+                      }}
+                      className="absolute top-1 right-1 z-10 p-1 rounded-full bg-white/80 hover:bg-white transition-colors"
+                    >
+                      <Heart
+                        size={14}
+                        className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-500"}
+                      />
+                    </button>
                     {product.badge && (
                       <span
                         className={`absolute top-1 left-1 z-10 text-xs font-semibold px-2 py-0.5 rounded ${

@@ -41,7 +41,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
         pendingQueue = [];
 
         if (typeof window !== "undefined") {
-          window.location.href = "/";
+          window.location.href = "/auth/login";
         }
       }
     } else {
