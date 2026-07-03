@@ -25,3 +25,16 @@ body {
 .ql-editor {
   min-height: 300px;
 }
+
+.hero-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  width: 10px;
+  height: 10px;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  background: #facc15;
+  width: 12px;
+  height: 12px;
+}

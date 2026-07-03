@@ -1,0 +1,28 @@
+[
+  {
+    "id": 2,
+    "badge": "Limited Time Offer",
+    "title": "Summer Styles",
+    "highlight": "Up to 50% Off",
+    "highlightSuffix": "",
+    "description": "Refresh your wardrobe with our curated summer collection. Comfort meets style.",
+    "primaryBtnText": "Shop Sale",
+    "primaryBtnLink": "/shop?sort=discount",
+    "secondaryBtnText": "New Arrivals",
+    "secondaryBtnLink": "/shop?sort=newest",
+    "image": "/home_banner.jpg"
+  },
+  {
+    "id": 3,
+    "badge": "Just Dropped",
+    "title": "Trending Now",
+    "highlight": "Fresh Picks",
+    "highlightSuffix": "2026",
+    "description": "Be the first to rock the latest drops. Explore what's hot this season.",
+    "primaryBtnText": "Explore Now",
+    "primaryBtnLink": "/shop?sort=newest",
+    "secondaryBtnText": "All Products",
+    "secondaryBtnLink": "/shop",
+    "image": "/nature.jpg"
+  }
+]

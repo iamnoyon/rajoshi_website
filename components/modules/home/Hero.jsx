@@ -1,48 +1,63 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import slides from "@/data/heroSlides.json";
+
+import "swiper/css";
+import "swiper/css/pagination";
 
 export default function Hero() {
   return (
-    <section className="relative bg-gradient-to-r from-[#042A55] to-[#063C76] text-white">
-      <div className="max-w-7xl mx-auto px-4 py-9">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <span className="inline-block bg-white/10 text-sm px-4 py-1.5 rounded-full mb-4">
-              New Season Collection
-            </span>
-            <h1 className="text-2xl md:text-4xl font-bold leading-tight mb-4">
-              Discover the
-              <span className="block text-yellow-300">Best Deals</span>
-              Online
-            </h1>
-            <p className="text-white/80 text-sm md:text-lg mb-6 max-w-md">
-              Shop the latest trends with exclusive discounts. Quality products
-              delivered to your doorstep.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-2 bg-white text-[#042A55] px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
-              >
-                Shop Now <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/shop?sort=newest"
-                className="inline-flex items-center gap-2 border border-white/30 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors text-sm md:text-base"
-              >
-                View Collections
-              </Link>
-            </div>
-          </div>
-          <div className="hidden md:flex justify-center">
-            <div className="w-48 h-48 bg-white/10 rounded-full flex items-center justify-center">
-              <div className="w-36 h-36 bg-white/10 rounded-full flex items-center justify-center">
-                <span className="text-5xl">&#x1F6CD;</span>
+    <section className="relative text-white">
+      <Swiper
+        modules={[Autoplay, Pagination]}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        // pagination={{ clickable: true }}
+        loop
+        className="hero-swiper"
+      >
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div className="relative h-[300px] md:h-[400px]">
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url('${slide.image}')` }}
+              />
+              <div className="absolute inset-0 bg-black/40" />
+              <div className="relative max-w-7xl mx-auto px-4 h-full flex items-center">
+                <div className="grid md:grid-cols-2 gap-8 items-center w-full">
+                  <div>
+                    <span className="inline-block bg-white/10 text-sm px-4 py-1.5 rounded-full mb-4">
+                      {slide.badge}
+                    </span>
+                    <h1 className="text-2xl md:text-4xl font-bold leading-tight mb-4">
+                      {slide.title}
+                      <span className="block text-yellow-300">
+                        {slide.highlight}
+                      </span>
+                      {slide.highlightSuffix}
+                    </h1>
+                    <p className="text-white/80 text-sm md:text-lg mb-6 max-w-md">
+                      {slide.description}
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        href={slide.primaryBtnLink}
+                        className="inline-flex items-center gap-2 bg-white text-[#042A55] px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm md:text-base"
+                      >
+                        {slide.primaryBtnText} <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
   );
 }

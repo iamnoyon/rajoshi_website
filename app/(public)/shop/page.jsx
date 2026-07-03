@@ -7,6 +7,10 @@ import {
   Grid3X3,
   LayoutList,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   X,
   Star,
   Filter,
@@ -374,33 +378,37 @@ export default function ShopPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8">
+            <div className="flex items-center justify-center gap-2 mt-8 text-sm text-gray-600">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"
+              >
+                <ChevronsLeft size={18} />
+              </button>
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"
               >
-                Previous
+                <ChevronLeft size={18} />
               </button>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`w-10 h-10 rounded-lg text-sm font-medium ${
-                    currentPage === i + 1
-                      ? "bg-[#042A55] text-white"
-                      : "border border-gray-300 text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+              <span className="px-3">
+                {`${(currentPage - 1) * productsPerPage + 1}-${Math.min(currentPage * productsPerPage, filteredProducts.length)} of ${filteredProducts.length}`}
+              </span>
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"
               >
-                Next
+                <ChevronRight size={18} />
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"
+              >
+                <ChevronsRight size={18} />
               </button>
             </div>
           )}
