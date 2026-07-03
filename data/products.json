@@ -1,0 +1,350 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Noise Cancelling Headphones",
+    "price": 79.99,
+    "originalPrice": 99.99,
+    "rating": 4.5,
+    "reviews": 284,
+    "sku": "WH-1000XM4",
+    "brand": "AudioTech",
+    "category": "Electronics",
+    "inStock": true,
+    "stockCount": 15,
+    "badge": "Sale",
+    "description": "Experience crystal-clear audio with our premium wireless headphones. Featuring active noise cancellation, 30-hour battery life, and ultra-comfortable design for all-day listening.",
+    "features": [
+      "Active Noise Cancellation (ANC)",
+      "30-hour battery life",
+      "Bluetooth 5.2 connectivity",
+      "Foldable design with carrying case",
+      "Built-in microphone for calls",
+      "Touch controls on ear cup"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "Silver", "Navy Blue"],
+    "sizes": []
+  },
+  {
+    "id": 2,
+    "name": "Smart Watch Pro",
+    "price": 199.99,
+    "originalPrice": 249.99,
+    "rating": 4.8,
+    "reviews": 256,
+    "sku": "SW-PRO-001",
+    "brand": "TechFit",
+    "category": "Electronics",
+    "inStock": true,
+    "stockCount": 23,
+    "badge": "New",
+    "description": "Stay connected and track your fitness with our advanced smartwatch. Features include heart rate monitoring, GPS tracking, and a vibrant AMOLED display.",
+    "features": [
+      "Heart rate & SpO2 monitoring",
+      "Built-in GPS",
+      "AMOLED always-on display",
+      "7-day battery life",
+      "Water resistant to 50m",
+      "100+ watch faces"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "Rose Gold", "Silver"],
+    "sizes": ["40mm", "44mm"]
+  },
+  {
+    "id": 3,
+    "name": "Running Shoes Ultra",
+    "price": 129.99,
+    "originalPrice": null,
+    "rating": 4.3,
+    "reviews": 89,
+    "sku": "RS-ULTRA-003",
+    "brand": "StrideMax",
+    "category": "Sports",
+    "inStock": true,
+    "stockCount": 30,
+    "badge": null,
+    "description": "Engineered for performance, these running shoes feature responsive cushioning and a breathable mesh upper for maximum comfort during runs.",
+    "features": [
+      "Responsive foam cushioning",
+      "Breathable mesh upper",
+      "Durable rubber outsole",
+      "Reflective details for visibility",
+      "Lightweight design at 280g",
+      "Anatomical foot shape"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black/Red", "Blue/White", "Green/Black"],
+    "sizes": ["8", "9", "10", "11", "12"]
+  },
+  {
+    "id": 4,
+    "name": "Laptop Backpack Pro",
+    "price": 49.99,
+    "originalPrice": 69.99,
+    "rating": 4.6,
+    "reviews": 312,
+    "sku": "BP-PRO-004",
+    "brand": "UrbanGear",
+    "category": "Fashion",
+    "inStock": true,
+    "stockCount": 45,
+    "badge": "Sale",
+    "description": "A sleek and functional backpack designed for professionals. Fits laptops up to 15.6 inches with multiple compartments for organization.",
+    "features": [
+      "Fits laptops up to 15.6\"",
+      "Water-resistant material",
+      "USB charging port",
+      "Anti-theft back pocket",
+      "Ergonomic padded straps",
+      "Lifetime warranty"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1622260614153-03223fb72052?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "Navy", "Gray"],
+    "sizes": []
+  },
+  {
+    "id": 5,
+    "name": "Bluetooth Speaker Max",
+    "price": 59.99,
+    "originalPrice": null,
+    "rating": 4.4,
+    "reviews": 178,
+    "sku": "BT-SPK-005",
+    "brand": "AudioTech",
+    "category": "Electronics",
+    "inStock": true,
+    "stockCount": 50,
+    "badge": null,
+    "description": "Powerful 360-degree sound in a portable design. Perfect for outdoor adventures with 20-hour battery life and IPX7 waterproof rating.",
+    "features": [
+      "360-degree immersive sound",
+      "20-hour battery life",
+      "IPX7 waterproof",
+      "Built-in microphone",
+      "Pairs with second speaker for stereo",
+      "Compact & portable design"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1589003077984-894e133dabab?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "Blue", "Red"],
+    "sizes": []
+  },
+  {
+    "id": 6,
+    "name": "Fitness Tracker Band",
+    "price": 89.99,
+    "originalPrice": 109.99,
+    "rating": 4.2,
+    "reviews": 95,
+    "sku": "FT-BAND-006",
+    "brand": "TechFit",
+    "category": "Electronics",
+    "inStock": true,
+    "stockCount": 18,
+    "badge": "Trending",
+    "description": "Track your daily activity, sleep quality, and workouts with this slim and stylish fitness band. Features a bright OLED display.",
+    "features": [
+      "24/7 heart rate tracking",
+      "Sleep analysis",
+      "15+ sport modes",
+      "OLED touch display",
+      "5-day battery life",
+      "Swim-proof to 50m"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1557438159-51eec7a6c9e8?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "Pink", "Teal"],
+    "sizes": ["S/M", "M/L"]
+  },
+  {
+    "id": 7,
+    "name": "Premium Sunglasses",
+    "price": 149.99,
+    "originalPrice": null,
+    "rating": 4.7,
+    "reviews": 67,
+    "sku": "PS-GLS-007",
+    "brand": "VisionCraft",
+    "category": "Fashion",
+    "inStock": true,
+    "stockCount": 12,
+    "badge": null,
+    "description": "Handcrafted polarized sunglasses with UV400 protection. Lightweight titanium frame for ultimate comfort and style.",
+    "features": [
+      "Polarized UV400 lenses",
+      "Titanium frame",
+      "Anti-scratch coating",
+      "Includes leather case",
+      "100% UVA/UVB protection",
+      "Adjustable nose pads"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Matte Black", "Gold", "Silver"],
+    "sizes": []
+  },
+  {
+    "id": 8,
+    "name": "Portable Charger 20000mAh",
+    "price": 34.99,
+    "originalPrice": 44.99,
+    "rating": 4.1,
+    "reviews": 445,
+    "sku": "PC-20K-008",
+    "brand": "PowerUp",
+    "category": "Electronics",
+    "inStock": true,
+    "stockCount": 60,
+    "badge": "Sale",
+    "description": "High-capacity portable charger with fast charging support. Charge two devices simultaneously with dual USB ports.",
+    "features": [
+      "20000mAh capacity",
+      "22.5W fast charging",
+      "Dual USB output",
+      "USB-C input/output",
+      "LED battery indicator",
+      "Compact & lightweight"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1615526675159-e248c3021d3f?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Black", "White"],
+    "sizes": []
+  },
+  {
+    "id": 9,
+    "name": "Professional Yoga Mat",
+    "price": 29.99,
+    "originalPrice": null,
+    "rating": 4.5,
+    "reviews": 201,
+    "sku": "YM-PRO-009",
+    "brand": "ZenFlex",
+    "category": "Sports",
+    "inStock": true,
+    "stockCount": 35,
+    "badge": null,
+    "description": "Non-slip yoga mat with alignment lines. Extra thick 6mm cushioning for joint protection during yoga and pilates sessions.",
+    "features": [
+      "6mm thick cushioning",
+      "Non-slip surface",
+      "Alignment guide lines",
+      "Eco-friendly TPE material",
+      "Lightweight & portable",
+      "Includes carrying strap"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1592432678016-e910b452f9a2?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Purple", "Blue", "Teal", "Pink"],
+    "sizes": []
+  },
+  {
+    "id": 10,
+    "name": "Smart Coffee Maker",
+    "price": 89.99,
+    "originalPrice": null,
+    "rating": 4.6,
+    "reviews": 156,
+    "sku": "SCM-100-010",
+    "brand": "BrewMaster",
+    "category": "Home & Living",
+    "inStock": true,
+    "stockCount": 20,
+    "badge": "New",
+    "description": "WiFi-enabled coffee maker you can control from your phone. Brew perfect coffee every morning with programmable scheduling.",
+    "features": [
+      "WiFi & app control",
+      "Programmable timer",
+      "12-cup capacity",
+      "Built-in grinder",
+      "Keep-warm function",
+      "Compatible with Alexa & Google"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=600&fit=crop"
+    ],
+    "colors": ["Stainless Steel", "Matte Black"],
+    "sizes": []
+  },
+  {
+    "id": 11,
+    "name": "LED Desk Lamp",
+    "price": 44.99,
+    "originalPrice": null,
+    "rating": 4.3,
+    "reviews": 88,
+    "sku": "LD-DESK-011",
+    "brand": "LightPro",
+    "category": "Home & Living",
+    "inStock": true,
+    "stockCount": 28,
+    "badge": null,
+    "description": "Adjustable LED desk lamp with 5 color temperatures and 10 brightness levels. USB charging port built into the base.",
+    "features": [
+      "5 color temperatures",
+      "10 brightness levels",
+      "USB charging port",
+      "Touch controls",
+      "Memory function",
+      "Eye-care technology"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1534073737927-85f1ebff1f5d?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=600&h=600&fit=crop"
+    ],
+    "colors": ["White", "Black"],
+    "sizes": []
+  },
+  {
+    "id": 12,
+    "name": "Face Moisturizer Premium",
+    "price": 24.99,
+    "originalPrice": 34.99,
+    "rating": 4.8,
+    "reviews": 334,
+    "sku": "FM-PREM-012",
+    "brand": "GlowLab",
+    "category": "Beauty",
+    "inStock": true,
+    "stockCount": 40,
+    "badge": "Bestseller",
+    "description": "Hydrating face moisturizer with hyaluronic acid and vitamin E. Lightweight formula suitable for all skin types.",
+    "features": [
+      "Hyaluronic acid formula",
+      "Vitamin E enriched",
+      "Non-comedogenic",
+      "Fragrance-free",
+      "Dermatologist tested",
+      "Cruelty-free"
+    ],
+    "images": [
+      "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&h=600&fit=crop"
+    ],
+    "colors": [],
+    "sizes": ["50ml", "100ml"]
+  }
+]

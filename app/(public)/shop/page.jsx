@@ -15,6 +15,7 @@ import {
   Star,
   Filter,
 } from "lucide-react";
+import products from "@/data/products.json";
 
 const sortOptions = [
   { label: "Featured", value: "featured" },
@@ -42,21 +43,6 @@ const priceRanges = [
   { label: "Over $200", min: 200, max: Infinity },
 ];
 
-const sampleProducts = [
-  { id: 1, name: "Wireless Headphones", price: 79.99, rating: 4.5, reviews: 128, category: "Electronics", image: "/products/headphones.jpg", badge: "Sale" },
-  { id: 2, name: "Smart Watch Pro", price: 199.99, rating: 4.8, reviews: 256, category: "Electronics", image: "/products/watch.jpg", badge: "New" },
-  { id: 3, name: "Running Shoes", price: 129.99, rating: 4.3, reviews: 89, category: "Sports", image: "/products/shoes.jpg" },
-  { id: 4, name: "Laptop Backpack", price: 49.99, rating: 4.6, reviews: 312, category: "Fashion", image: "/products/backpack.jpg", badge: "Sale" },
-  { id: 5, name: "Bluetooth Speaker", price: 59.99, rating: 4.4, reviews: 178, category: "Electronics", image: "/products/speaker.jpg" },
-  { id: 6, name: "Fitness Tracker", price: 89.99, rating: 4.2, reviews: 95, category: "Electronics", image: "/products/tracker.jpg", badge: "Trending" },
-  { id: 7, name: "Premium Sunglasses", price: 149.99, rating: 4.7, reviews: 67, category: "Fashion", image: "/products/sunglasses.jpg" },
-  { id: 8, name: "Portable Charger", price: 34.99, rating: 4.1, reviews: 445, category: "Electronics", image: "/products/charger.jpg" },
-  { id: 9, name: "Yoga Mat", price: 29.99, rating: 4.5, reviews: 201, category: "Sports", image: "/products/yogamat.jpg" },
-  { id: 10, name: "Coffee Maker", price: 89.99, rating: 4.6, reviews: 156, category: "Home & Living", image: "/products/coffeemaker.jpg", badge: "New" },
-  { id: 11, name: "Desk Lamp", price: 44.99, rating: 4.3, reviews: 88, category: "Home & Living", image: "/products/lamp.jpg" },
-  { id: 12, name: "Face Moisturizer", price: 24.99, rating: 4.8, reviews: 334, category: "Beauty", image: "/products/moisturizer.jpg", badge: "Bestseller" },
-];
-
 export default function ShopPage() {
   const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState("featured");
@@ -66,7 +52,7 @@ export default function ShopPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
-  const filteredProducts = sampleProducts.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
     if (selectedPriceRanges.length > 0) {
       const inRange = selectedPriceRanges.some(
@@ -287,7 +273,11 @@ export default function ShopPage() {
                         {product.badge}
                       </span>
                     )}
-                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform" />
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
                   </div>
                   <div className="p-3">
                     <p className="text-xs text-gray-500 mb-1">
@@ -329,7 +319,7 @@ export default function ShopPage() {
                   href={`/product/${product.id}`}
                   className="group flex gap-4 bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow p-3"
                 >
-                  <div className="w-32 h-32 bg-gray-100 rounded-lg flex-shrink-0 relative">
+                  <div className="w-32 h-32 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
                     {product.badge && (
                       <span
                         className={`absolute top-1 left-1 z-10 text-xs font-semibold px-2 py-0.5 rounded ${
@@ -343,6 +333,11 @@ export default function ShopPage() {
                         {product.badge}
                       </span>
                     )}
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-500">{product.category}</p>

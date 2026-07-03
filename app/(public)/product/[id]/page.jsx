@@ -15,33 +15,7 @@ import {
   Plus,
   Share2,
 } from "lucide-react";
-
-const sampleProduct = {
-  id: 1,
-  name: "Wireless Noise Cancelling Headphones",
-  price: 79.99,
-  originalPrice: 99.99,
-  rating: 4.5,
-  reviews: 284,
-  sku: "WH-1000XM4",
-  brand: "AudioTech",
-  category: "Electronics",
-  inStock: true,
-  stockCount: 15,
-  description:
-    "Experience crystal-clear audio with our premium wireless headphones. Featuring active noise cancellation, 30-hour battery life, and ultra-comfortable design for all-day listening.",
-  features: [
-    "Active Noise Cancellation (ANC)",
-    "30-hour battery life",
-    "Bluetooth 5.2 connectivity",
-    "Foldable design with carrying case",
-    "Built-in microphone for calls",
-    "Touch controls on ear cup",
-  ],
-  images: ["/products/headphones.jpg", "/products/headphones2.jpg"],
-  colors: ["Black", "Silver", "Navy Blue"],
-  sizes: [],
-};
+import products from "@/data/products.json";
 
 const reviews = [
   {
@@ -73,13 +47,6 @@ const reviews = [
   },
 ];
 
-const relatedProducts = [
-  { id: 5, name: "Bluetooth Speaker", price: 59.99, rating: 4.4 },
-  { id: 6, name: "Fitness Tracker", price: 89.99, rating: 4.2 },
-  { id: 8, name: "Portable Charger", price: 34.99, rating: 4.1 },
-  { id: 2, name: "Smart Watch Pro", price: 199.99, rating: 4.8 },
-];
-
 export default function ProductDetailPage() {
   const params = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -87,7 +54,8 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
 
-  const product = sampleProduct;
+  const product = products.find((p) => p.id === Number(params.id)) || products[0];
+  const relatedProducts = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -116,12 +84,14 @@ export default function ProductDetailPage() {
         {/* Images */}
         <div>
           <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
-            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <span className="text-gray-400 text-lg">Product Image</span>
-            </div>
+            <img
+              src={product.images[selectedImage]}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex gap-3">
-            {product.images.map((_, idx) => (
+            {product.images.map((img, idx) => (
               <button
                 key={idx}
                 onClick={() => setSelectedImage(idx)}
@@ -131,7 +101,7 @@ export default function ProductDetailPage() {
                     : "border-transparent hover:border-gray-300"
                 }`}
               >
-                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200" />
+                <img src={img} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -372,8 +342,12 @@ export default function ProductDetailPage() {
               href={`/product/${rp.id}`}
               className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="aspect-square bg-gray-100">
-                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform" />
+              <div className="aspect-square bg-gray-100 overflow-hidden">
+                <img
+                  src={rp.images[0]}
+                  alt={rp.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
               </div>
               <div className="p-3">
                 <h3 className="font-medium text-sm text-gray-900 truncate group-hover:text-[#042A55]">

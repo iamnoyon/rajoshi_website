@@ -1,5 +1,18 @@
 [
   {
+    "id": 1,
+    "badge": "New Season Collection",
+    "title": "Discover the",
+    "highlight": "Best Deals",
+    "highlightSuffix": "Online",
+    "description": "Shop the latest trends with exclusive discounts. Quality products delivered to your doorstep.",
+    "primaryBtnText": "Shop Now",
+    "primaryBtnLink": "/shop",
+    "secondaryBtnText": "View Collections",
+    "secondaryBtnLink": "/shop?sort=newest",
+    "image": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=600&fit=crop"
+  },
+  {
     "id": 2,
     "badge": "Limited Time Offer",
     "title": "Summer Styles",
@@ -10,7 +23,7 @@
     "primaryBtnLink": "/shop?sort=discount",
     "secondaryBtnText": "New Arrivals",
     "secondaryBtnLink": "/shop?sort=newest",
-    "image": "/home_banner.jpg"
+    "image": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&h=600&fit=crop"
   },
   {
     "id": 3,
@@ -23,6 +36,6 @@
     "primaryBtnLink": "/shop?sort=newest",
     "secondaryBtnText": "All Products",
     "secondaryBtnLink": "/shop",
-    "image": "/nature.jpg"
+    "image": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&h=600&fit=crop"
   }
 ]
