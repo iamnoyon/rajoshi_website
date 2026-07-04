@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -16,6 +16,8 @@ import {
   Share2,
 } from "lucide-react";
 import products from "@/data/products.json";
+import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import ProductCard from "@/components/common/ProductCard";
 
 const reviews = [
   {
@@ -53,8 +55,15 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+  const [wishlist, setWishlist] = useState([]);
 
   const product = products.find((p) => p.id === Number(params.id)) || products[0];
+
+  useEffect(() => {
+    setWishlist(getWishlistIds());
+    const unsubscribe = onWishlistUpdate(() => setWishlist(getWishlistIds()));
+    return unsubscribe;
+  }, []);
   const relatedProducts = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 
   return (
@@ -229,8 +238,14 @@ export default function ProductDetailPage() {
               <ShoppingCart size={20} />
               Add to Cart
             </button>
-            <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <Heart size={20} />
+            <button
+              onClick={() => toggleWishlistItem(product.id)}
+              className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Heart
+                size={20}
+                className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : ""}
+              />
             </button>
             <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Share2 size={20} />
@@ -337,40 +352,7 @@ export default function ProductDetailPage() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {relatedProducts.map((rp) => (
-            <Link
-              key={rp.id}
-              href={`/product/${rp.id}`}
-              className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-            >
-              <div className="aspect-square bg-gray-100 overflow-hidden">
-                <img
-                  src={rp.images[0]}
-                  alt={rp.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
-              </div>
-              <div className="p-3">
-                <h3 className="font-medium text-sm text-gray-900 truncate group-hover:text-[#042A55]">
-                  {rp.name}
-                </h3>
-                <div className="flex items-center gap-1 mt-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={12}
-                      className={
-                        i < Math.floor(rp.rating)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300"
-                      }
-                    />
-                  ))}
-                </div>
-                <span className="font-bold text-[#042A55] mt-1 block">
-                  ${rp.price.toFixed(2)}
-                </span>
-              </div>
-            </Link>
+            <ProductCard key={rp.id} product={rp} />
           ))}
         </div>
       </div>

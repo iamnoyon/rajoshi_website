@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
-  SlidersHorizontal,
   Grid3X3,
   LayoutList,
   ChevronDown,
@@ -12,12 +11,10 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
-  Star,
-  Heart,
   Filter,
 } from "lucide-react";
 import products from "@/data/products.json";
-import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import ProductCard from "@/components/common/ProductCard";
 
 const sortOptions = [
   { label: "Featured", value: "featured" },
@@ -52,18 +49,7 @@ export default function ShopPage() {
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [wishlist, setWishlist] = useState([]);
   const productsPerPage = 8;
-
-  useEffect(() => {
-    setWishlist(getWishlistIds());
-    return onWishlistUpdate(() => setWishlist(getWishlistIds()));
-  }, []);
-
-  const handleToggleWishlist = useCallback((id) => {
-    const updated = toggleWishlistItem(id);
-    setWishlist(updated);
-  }, []);
 
   const filteredProducts = products.filter((p) => {
     if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
@@ -267,143 +253,13 @@ export default function ShopPage() {
           {viewMode === "grid" ? (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {paginatedProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.id}`}
-                  className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative aspect-square bg-gray-100">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleToggleWishlist(product.id);
-                      }}
-                      className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
-                    >
-                      <Heart
-                        size={16}
-                        className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-500"}
-                      />
-                    </button>
-                    {product.badge && (
-                      <span
-                        className={`absolute top-2 left-2 z-10 text-xs font-semibold px-2 py-0.5 rounded ${
-                          product.badge === "Sale"
-                            ? "bg-red-500 text-white"
-                            : product.badge === "New"
-                            ? "bg-green-500 text-white"
-                            : "bg-yellow-500 text-white"
-                        }`}
-                      >
-                        {product.badge}
-                      </span>
-                    )}
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <p className="text-xs text-gray-500 mb-1">
-                      {product.category}
-                    </p>
-                    <h3 className="font-medium text-sm text-gray-900 truncate group-hover:text-[#042A55] transition-colors">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-1 mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          className={
-                            i < Math.floor(product.rating)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          }
-                        />
-                      ))}
-                      <span className="text-xs text-gray-500 ml-1">
-                        ({product.reviews})
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="font-bold text-[#042A55]">
-                        ${product.price.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
             <div className="space-y-3">
               {paginatedProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.id}`}
-                  className="group flex gap-4 bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow p-3"
-                >
-                  <div className="w-32 h-32 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleToggleWishlist(product.id);
-                      }}
-                      className="absolute top-1 right-1 z-10 p-1 rounded-full bg-white/80 hover:bg-white transition-colors"
-                    >
-                      <Heart
-                        size={14}
-                        className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-500"}
-                      />
-                    </button>
-                    {product.badge && (
-                      <span
-                        className={`absolute top-1 left-1 z-10 text-xs font-semibold px-2 py-0.5 rounded ${
-                          product.badge === "Sale"
-                            ? "bg-red-500 text-white"
-                            : product.badge === "New"
-                            ? "bg-green-500 text-white"
-                            : "bg-yellow-500 text-white"
-                        }`}
-                      >
-                        {product.badge}
-                      </span>
-                    )}
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-gray-500">{product.category}</p>
-                    <h3 className="font-medium text-gray-900 group-hover:text-[#042A55] transition-colors">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-1 mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          className={
-                            i < Math.floor(product.rating)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          }
-                        />
-                      ))}
-                      <span className="text-xs text-gray-500 ml-1">
-                        ({product.reviews} reviews)
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <span className="font-bold text-[#042A55] text-lg">
-                        ${product.price.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                <ProductCard key={product.id} product={product} variant="list" />
               ))}
             </div>
           )}
