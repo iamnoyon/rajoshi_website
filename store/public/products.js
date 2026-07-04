@@ -10,8 +10,21 @@ const productSlice = apiSlice.injectEndpoints({
                 params
             }),
         }),
+        getProductById: builder.query({
+            query: ({id}) => ({
+                url: `/products/${id}`,
+                method: 'GET',
+            }),
+        }),
+        getProductsByCategory: builder.query({
+            query: (params) => ({
+                url: '/products/category',
+                method: 'GET',
+                params
+            })
+        })
     }),
     overrideExisting: true
 });
 
-export const { useLazyGetProductsQuery, useGetProductsQuery } = productSlice
+export const { useLazyGetProductsQuery, useGetProductsQuery, useGetProductByIdQuery, useGetProductsByCategoryQuery } = productSlice
