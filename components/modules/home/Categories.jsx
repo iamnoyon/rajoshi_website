@@ -6,35 +6,11 @@ import { ArrowRight } from "lucide-react";
 import { useGetCategoryListQuery } from "@/store/public/productCategory";
 import { useRouter } from "next/navigation";
 
-const categories = [
-  {
-    name: "Electronics",
-    href: "/shop?category=electronics",
-    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&q=80",
-  },
-  {
-    name: "Fashion",
-    href: "/shop?category=fashion",
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&q=80",
-  },
-  {
-    name: "Home & Living",
-    href: "/shop?category=home",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&q=80",
-  },
-  {
-    name: "Sports",
-    href: "/shop?category=sports",
-    image: "https://images.unsplash.com/photo-1461896836934-bd45ba8fcf9b?w=400&q=80",
-  },
-];
-
 export default function Categories() {
   const router = useRouter()
-  // const {data: categories} = useGetCategoryListQuery()
+  const {data: categories} = useGetCategoryListQuery()
 
   const handleClick = (href) => {
-    // router.push(`/shop?category=${href}`)
     router.push(href)
   }
   return (
@@ -49,10 +25,10 @@ export default function Categories() {
         </Link>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {categories?.map((cat) => (
+        {categories?.data?.map((cat) => (
           <button
-            key={cat.name}
-            onClick={()=>handleClick(cat.href)}
+            key={cat.id}
+            onClick={()=>handleClick(`/shop?category=${cat.slug}`)}
             className="group relative aspect-square hover:cursor-pointer rounded-xl overflow-hidden bg-gray-100"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
@@ -65,6 +41,7 @@ export default function Categories() {
             <Image
               src={cat.image}
               alt={cat.name}
+              unoptimized
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 50vw, 25vw"
