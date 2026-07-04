@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { getWishlistCount, onWishlistUpdate } from "@/utils/wishlist";
+import { useSelector } from "react-redux";
 
 const navLinks = [
   { name: "Shop", href: "/shop" },
@@ -29,7 +30,8 @@ export default function PublicHeader() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
   const pathname = usePathname();
-
+  const user = useSelector((state) => state.user);
+  
   useEffect(() => {
     setWishlistCount(getWishlistCount());
     return onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
@@ -133,7 +135,17 @@ export default function PublicHeader() {
               href="/account"
               className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] rounded-lg hidden sm:flex"
             >
-              <User size={20} />
+              {user?.id ? (
+                <Image
+                  src={user?.avatar || "/default-avatar.png"}
+                  alt="User Avatar"
+                  width={20}
+                  height={20}
+                  className="rounded-full"
+                />
+              ) : (
+                <User size={20} />
+              )}
               <span className="text-[10px]">Account</span>
             </Link>
             <Link

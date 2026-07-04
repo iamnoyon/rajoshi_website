@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CreditCard,
@@ -11,6 +11,7 @@ import {
   MapPin,
   Package,
 } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const steps = [
   { id: 1, label: "Shipping", icon: Truck },
@@ -24,6 +25,7 @@ const sampleCart = [
 ];
 
 export default function CheckoutPage() {
+  const user = useSelector((state) => state.user);
   const [currentStep, setCurrentStep] = useState(1);
   const [shippingForm, setShippingForm] = useState({
     firstName: "",
@@ -60,6 +62,23 @@ export default function CheckoutPage() {
     e.preventDefault();
     setCurrentStep(3);
   };
+
+  useEffect(() => {
+    if(user && user.id) {
+      const splitName = user.name ? user.name.split(" ") : ["", ""];
+      setShippingForm({
+        firstName: splitName[0] || user.name,
+        lastName: splitName[1] || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        address: user.address || "",
+        city: user.city || "",
+        state: user.state || "",
+        zipCode: user.zipCode || "",
+        country: user.country || "US",
+      });
+    }
+  }, [user]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
