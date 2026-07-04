@@ -17,7 +17,7 @@ import {
   Plus,
   Share2,
 } from "lucide-react";
-import { getWishlistItems, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
 import { addToCart, removeFromCart, isInCart, onCartUpdate } from "@/utils/cart";
 import ProductCard from "@/components/common/ProductCard";
 import { useGetProductByIdQuery, useGetProductsByCategoryQuery } from "@/store/public/products";
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
-  const [wishlistItems, setWishlistItems] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [inCart, setInCart] = useState(false);
 
   // api call to fetch product details
@@ -64,10 +64,10 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (product) {
-      setWishlistItems(getWishlistItems());
+      setWishlist(getWishlistIds());
       setInCart(isInCart(product.id));
     }
-    const unsubWishlist = onWishlistUpdate(() => { if (product) setWishlistItems(getWishlistItems()); });
+    const unsubWishlist = onWishlistUpdate(() => { if (product) setWishlist(getWishlistIds()); });
     const unsubCart = onCartUpdate(() => { if (product) setInCart(isInCart(product.id)); });
     return () => { unsubWishlist(); unsubCart(); };
   }, [product]);
@@ -199,12 +199,12 @@ export default function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-3 mb-6">
-            <button onClick={() => { if (inCart) { removeFromCart(product.id); setInCart(false); } else { addToCart(product, quantity); setInCart(true); } }} className={`flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-6 rounded-lg transition-colors ${inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-[#042A55] hover:bg-[#063C76] text-white"}`}>
+            <button onClick={() => { if (inCart) { removeFromCart(product.id); setInCart(false); } else { addToCart(product.id, quantity); setInCart(true); } }} className={`flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-6 rounded-lg transition-colors ${inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-[#042A55] hover:bg-[#063C76] text-white"}`}>
               <ShoppingCart size={20} />
               {inCart ? "Remove from Cart" : "Add to Cart"}
             </button>
-            <button onClick={() => { const updated = toggleWishlistItem(product); setWishlistItems(updated); }} className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <Heart size={20} className={wishlistItems.some((item) => item.id === product.id) ? "fill-red-500 text-red-500" : ""} />
+            <button onClick={() => toggleWishlistItem(product.id)} className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <Heart size={20} className={wishlist.includes(product.id) ? "fill-red-500 text-red-500" : ""} />
             </button>
             <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Share2 size={20} />

@@ -4,7 +4,7 @@ import ProductCard from "@/components/common/ProductCard";
 import { useGetProductsQuery } from "@/store/public/products";
 
 export default function BestSellers() {
-  const { data: bestSellers } = useGetProductsQuery({ tag: "Best Seller" });
+  const { data: bestSellers } = useGetProductsQuery({ tag: "Best_Seller" });
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12 bg-white">

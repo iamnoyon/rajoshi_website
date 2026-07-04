@@ -3,18 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, ChevronRight, Tag, X } from "lucide-react";
-import {
-  getCartItems,
-  getCartCount,
-  onCartUpdate,
-} from "@/utils/cart";
-import {
-  applyCoupon,
-  getAppliedCoupon,
-  removeCoupon,
-  calculateDiscount,
-  onCouponUpdate,
-} from "@/utils/coupon";
+import { getCartItems, onCartUpdate } from "@/utils/cart";
+import { useGetProductsByMultipleIdsQuery } from "@/store/public/products";
+import { applyCoupon, getAppliedCoupon, removeCoupon, calculateDiscount, onCouponUpdate } from "@/utils/coupon";
 import CartItem from "@/components/common/CartItem";
 
 export default function CartPage() {
@@ -31,9 +22,18 @@ export default function CartPage() {
     return () => { unsubCart(); unsubCoupon(); };
   }, []);
 
-  const itemCount = cartItems.length;
+  const ids = cartItems.map((item) => item.id);
+  const { data: productsData, isLoading: productsLoading } = useGetProductsByMultipleIdsQuery(ids, { skip: ids.length === 0 });
+  const products = productsData?.data || [];
 
-  const subtotal = cartItems.reduce((sum, item) => {
+  const mergedCart = cartItems.map((item) => {
+    const product = products.find((p) => p.id === item.id);
+    return product ? { ...product, quantity: item.quantity } : null;
+  }).filter(Boolean);
+
+  const itemCount = mergedCart.length;
+
+  const subtotal = mergedCart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.price) || 0;
     return sum + price * item.quantity;
   }, 0);
@@ -89,9 +89,15 @@ export default function CartPage() {
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
-          {cartItems.map((item) => (
-            <CartItem key={item.id} item={item} />
-          ))}
+          {productsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#042A55]" />
+            </div>
+          ) : (
+            mergedCart.map((item) => (
+              <CartItem key={item.id} item={item} />
+            ))
+          )}
         </div>
 
         <div className="lg:col-span-1">
@@ -146,6 +152,7 @@ export default function CartPage() {
                 <span className="font-medium text-green-600">-${discount.toFixed(2)}</span>
               </div>
             )}
+
             <div className="border-t border-gray-200 pt-4 mb-6">
               <div className="flex justify-between">
                 <span className="font-bold text-gray-900">Total</span>

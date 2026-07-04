@@ -26,14 +26,6 @@ const sortOptions = [
   { label: "Best Rating", value: "rating" },
 ];
 
-const priceRanges = [
-  { label: "Under $25", min: 0, max: 25 },
-  { label: "$25 - $50", min: 25, max: 50 },
-  { label: "$50 - $100", min: 50, max: 100 },
-  { label: "$100 - $200", min: 100, max: 200 },
-  { label: "Over $200", min: 200, max: Infinity },
-];
-
 export default function ShopPage() {
   return (
     <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#042A55]" /></div>}>
@@ -49,7 +41,6 @@ function ShopContent() {
   const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState("featured");
   const [selectedCategory, setSelectedCategory] = useState(urlCategory || "All");
-  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
@@ -76,32 +67,13 @@ function ShopContent() {
 
   const allProducts = apiProducts?.data?.content || [];
 
-  const filteredProducts = allProducts.filter((p) => {
-    if (selectedPriceRanges.length > 0) {
-      const price = typeof p.price === "string" ? parseFloat(p.price) : p.price;
-      const inRange = selectedPriceRanges.some((range) => price >= range.min && price < range.max);
-      if (!inRange) return false;
-    }
-    return true;
-  });
-
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const paginatedProducts = filteredProducts.slice(
+  const totalPages = Math.ceil(allProducts.length / productsPerPage);
+  const paginatedProducts = allProducts.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
   );
 
-  const togglePriceRange = (range) => {
-    setSelectedPriceRanges((prev) =>
-      prev.some((r) => r.label === range.label)
-        ? prev.filter((r) => r.label !== range.label)
-        : [...prev, range]
-    );
-    setCurrentPage(1);
-  };
-
-  const activeFiltersCount =
-    (selectedCategory !== "All" ? 1 : 0) + selectedPriceRanges.length;
+  const activeFiltersCount = selectedCategory !== "All" ? 1 : 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -116,7 +88,7 @@ function ShopContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">All Products</h1>
-          <p className="text-sm text-gray-500 mt-1">{filteredProducts.length} products found</p>
+          <p className="text-sm text-gray-500 mt-1">{allProducts.length} products found</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={() => setFilterOpen(true)} className="lg:hidden flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">
@@ -155,19 +127,8 @@ function ShopContent() {
                 ))}
               </div>
             </div>
-            <div>
-              <h3 className="font-semibold text-sm text-gray-900 mb-3">Price Range</h3>
-              <div className="space-y-1">
-                {priceRanges.map((range) => (
-                  <label key={range.label} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 cursor-pointer">
-                    <input type="checkbox" checked={selectedPriceRanges.some((r) => r.label === range.label)} onChange={() => togglePriceRange(range)} className="w-4 h-4 text-[#042A55] border-gray-300 rounded focus:ring-[#042A55]" />
-                    {range.label}
-                  </label>
-                ))}
-              </div>
-            </div>
             {activeFiltersCount > 0 && (
-              <button onClick={() => { setSelectedCategory("All"); setSelectedPriceRanges([]); setCurrentPage(1); }} className="text-sm text-red-500 hover:text-red-600 font-medium">Clear all filters</button>
+              <button onClick={() => { setSelectedCategory("All"); setCurrentPage(1); }} className="text-sm text-red-500 hover:text-red-600 font-medium">Clear all filters</button>
             )}
           </div>
         </aside>
@@ -176,18 +137,10 @@ function ShopContent() {
         <div className="flex-1">
           {activeFiltersCount > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {selectedCategory !== "All" && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-[#042A55] rounded-full text-sm">
-                  {selectedCategory}
-                  <button onClick={() => setSelectedCategory("All")} className="hover:text-red-500"><X size={14} /></button>
-                </span>
-              )}
-              {selectedPriceRanges.map((range) => (
-                <span key={range.label} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-[#042A55] rounded-full text-sm">
-                  {range.label}
-                  <button onClick={() => togglePriceRange(range)} className="hover:text-red-500"><X size={14} /></button>
-                </span>
-              ))}
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-[#042A55] rounded-full text-sm">
+                {selectedCategory}
+                <button onClick={() => setSelectedCategory("All")} className="hover:text-red-500"><X size={14} /></button>
+              </span>
             </div>
           )}
 
@@ -198,7 +151,7 @@ function ShopContent() {
           ) : paginatedProducts.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-500 mb-4">No products found.</p>
-              <button onClick={() => { setSelectedCategory("All"); setSelectedPriceRanges([]); }} className="text-[#042A55 hover:underline">Clear filters</button>
+              <button onClick={() => setSelectedCategory("All")} className="text-[#042A55] hover:underline">Clear filters</button>
             </div>
           ) : viewMode === "grid" ? (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -218,7 +171,7 @@ function ShopContent() {
             <div className="flex items-center justify-center gap-2 mt-8 text-sm text-gray-600">
               <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"><ChevronsLeft size={18} /></button>
               <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1} className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"><ChevronLeft size={18} /></button>
-              <span className="px-3">{`${(currentPage - 1) * productsPerPage + 1}-${Math.min(currentPage * productsPerPage, filteredProducts.length)} of ${filteredProducts.length}`}</span>
+              <span className="px-3">{`${(currentPage - 1) * productsPerPage + 1}-${Math.min(currentPage * productsPerPage, allProducts.length)} of ${allProducts.length}`}</span>
               <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"><ChevronRight size={18} /></button>
               <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#042A55]/10 text-[#042A55]"><ChevronsRight size={18} /></button>
             </div>
@@ -243,17 +196,6 @@ function ShopContent() {
                     <button key={cat} onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }} className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedCategory === cat ? "bg-[#042A55] text-white" : "text-gray-600 hover:bg-gray-100"}`}>
                       {cat}
                     </button>
-                  ))}
-                </div>
-              </div>
-              <div className="mb-6">
-                <h3 className="font-semibold text-sm text-gray-900 mb-3">Price Range</h3>
-                <div className="space-y-1">
-                  {priceRanges.map((range) => (
-                    <label key={range.label} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100 cursor-pointer">
-                      <input type="checkbox" checked={selectedPriceRanges.some((r) => r.label === range.label)} onChange={() => togglePriceRange(range)} className="w-4 h-4 text-[#042A55] border-gray-300 rounded focus:ring-[#042A55]" />
-                      {range.label}
-                    </label>
                   ))}
                 </div>
               </div>

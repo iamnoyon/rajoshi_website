@@ -22,9 +22,16 @@ const productSlice = apiSlice.injectEndpoints({
                 method: 'GET',
                 params
             })
-        })
+        }),
+        getProductsByMultipleIds: builder.query({
+            query: (ids) => ({
+                url: '/products/batch',
+                method: 'POST',
+                body: { ids }
+            }),
+        }),
     }),
     overrideExisting: true
 });
 
-export const { useLazyGetProductsQuery, useGetProductsQuery, useGetProductByIdQuery, useGetProductsByCategoryQuery } = productSlice
+export const { useLazyGetProductsQuery, useGetProductsQuery, useGetProductByIdQuery, useGetProductsByCategoryQuery, useGetProductsByMultipleIdsQuery } = productSlice
