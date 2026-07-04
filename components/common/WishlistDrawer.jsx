@@ -4,24 +4,24 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { X, Heart } from "lucide-react";
-import { getWishlistIds, onWishlistUpdate } from "@/utils/wishlist";
+import { getWishlistItems, onWishlistUpdate } from "@/utils/wishlist";
 import { addToCart } from "@/utils/cart";
 import WishlistItem from "@/components/common/WishlistItem";
 
 export default function WishlistDrawer({ isOpen, onClose }) {
   const router = useRouter();
-  const [wishlistIds, setWishlistIds] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   useEffect(() => {
-    setWishlistIds(getWishlistIds());
-    return onWishlistUpdate(() => setWishlistIds(getWishlistIds()));
+    setWishlistItems(getWishlistItems());
+    return onWishlistUpdate(() => setWishlistItems(getWishlistItems()));
   }, []);
 
   const handleAddAllToCart = useCallback(() => {
-    wishlistIds.forEach((id) => addToCart(id, 1));
+    wishlistItems.forEach((item) => addToCart(item, 1));
     onClose();
     router.push("/cart");
-  }, [wishlistIds, onClose, router]);
+  }, [wishlistItems, onClose, router]);
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function WishlistDrawer({ isOpen, onClose }) {
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <Heart size={20} className="fill-red-500 text-red-500" />
-            <h2 className="text-lg font-bold text-gray-900">Wishlist ({wishlistIds.length})</h2>
+            <h2 className="text-lg font-bold text-gray-900">Wishlist ({wishlistItems.length})</h2>
           </div>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
             <X size={20} />
@@ -39,7 +39,7 @@ export default function WishlistDrawer({ isOpen, onClose }) {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          {wishlistIds.length === 0 ? (
+          {wishlistItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full px-4 text-center">
               <Heart size={48} className="text-gray-300 mb-4" />
               <p className="text-gray-500 mb-4">Your wishlist is empty</p>
@@ -49,14 +49,14 @@ export default function WishlistDrawer({ isOpen, onClose }) {
             </div>
           ) : (
             <div className="p-4 space-y-3">
-              {wishlistIds.map((id) => (
-                <WishlistItem key={id} id={id} compact />
+              {wishlistItems.map((item) => (
+                <WishlistItem key={item.id} item={item} compact />
               ))}
             </div>
           )}
         </div>
 
-        {wishlistIds.length > 0 && (
+        {wishlistItems.length > 0 && (
           <div className="p-4 border-t border-gray-200">
             <button onClick={handleAddAllToCart} className="w-full flex hover:cursor-pointer items-center justify-center gap-2 bg-[#042A55] hover:bg-[#063C76] text-white font-semibold py-3 px-6 rounded-lg transition-colors">
               Add All to Cart

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Star, Heart, ShoppingCart, Check } from "lucide-react";
-import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import { getWishlistItems, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
 import { addToCart, isInCart, onCartUpdate } from "@/utils/cart";
 import { useState, useEffect, useCallback } from "react";
 
@@ -35,13 +35,13 @@ function getCategoryName(category) {
 }
 
 export default function ProductCard({ product, variant = "grid" }) {
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState([]);
   const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
-    setWishlist(getWishlistIds());
+    setWishlistItems(getWishlistItems());
     setInCart(isInCart(product.id));
-    const unsubWishlist = onWishlistUpdate(() => setWishlist(getWishlistIds()));
+    const unsubWishlist = onWishlistUpdate(() => setWishlistItems(getWishlistItems()));
     const unsubCart = onCartUpdate(() => setInCart(isInCart(product.id)));
     return () => { unsubWishlist(); unsubCart(); };
   }, [product.id]);
@@ -49,18 +49,18 @@ export default function ProductCard({ product, variant = "grid" }) {
   const handleToggleWishlist = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    const updated = toggleWishlistItem(product.id);
-    setWishlist(updated);
-  }, [product.id]);
+    const updated = toggleWishlistItem(product);
+    setWishlistItems(updated);
+  }, [product]);
 
   const handleAddToCart = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product.id);
+    addToCart(product);
     setInCart(true);
-  }, [product.id]);
+  }, [product]);
 
-  const isWishlisted = wishlist.includes(product.id);
+  const isWishlisted = wishlistItems.some((item) => item.id === product.id);
   const categoryName = getCategoryName(product.category);
   const price = formatPrice(product.price);
   const originalPrice = formatPrice(product.originalPrice || product.discountPrice);

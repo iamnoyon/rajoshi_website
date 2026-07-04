@@ -33,10 +33,13 @@ export default function CartPage() {
 
   const itemCount = cartItems.length;
 
-  const subtotal = 0;
-  const shipping = 0;
-  const discount = 0;
-  const total = 0;
+  const subtotal = cartItems.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.price) || 0;
+    return sum + price * item.quantity;
+  }, 0);
+  const shipping = coupon?.type === "freeshipping" ? 0 : subtotal > 50 ? 0 : 9.99;
+  const discount = calculateDiscount(coupon, subtotal);
+  const total = subtotal - discount + shipping;
 
   const handleApplyCoupon = () => {
     setCouponError("");
@@ -87,7 +90,7 @@ export default function CartPage() {
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map((item) => (
-            <CartItem key={item.id} id={item.id} quantity={item.quantity} />
+            <CartItem key={item.id} item={item} />
           ))}
         </div>
 
@@ -97,7 +100,11 @@ export default function CartPage() {
             <div className="space-y-3 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-medium">Calculated at checkout</span>
+                <span className="font-medium">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Shipping</span>
+                <span className="font-medium">{shipping === 0 ? <span className="text-green-600">Free</span> : `$${shipping.toFixed(2)}`}</span>
               </div>
             </div>
 
@@ -131,6 +138,19 @@ export default function CartPage() {
                   {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
                 </div>
               )}
+            </div>
+
+            {discount > 0 && (
+              <div className="flex justify-between text-sm mb-3">
+                <span className="text-green-600">Discount</span>
+                <span className="font-medium text-green-600">-${discount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="border-t border-gray-200 pt-4 mb-6">
+              <div className="flex justify-between">
+                <span className="font-bold text-gray-900">Total</span>
+                <span className="font-bold text-[#042A55] text-lg">${total.toFixed(2)}</span>
+              </div>
             </div>
 
             <Link href="/checkout" className="block w-full text-center bg-[#042A55] hover:bg-[#063C76] text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-3">

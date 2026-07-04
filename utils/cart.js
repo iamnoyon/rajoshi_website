@@ -6,7 +6,9 @@ export function getCartItems() {
   const saved = document.cookie
     .split("; ")
     .find((c) => c.startsWith(`${CART_KEY}=`));
-  return saved ? JSON.parse(saved.split("=")[1]) : [];
+  if (!saved) return [];
+  const parsed = JSON.parse(saved.split("=")[1]);
+  return parsed.map((item) => typeof item === "string" ? { id: item, quantity: 1 } : item);
 }
 
 function setCartItems(items) {
@@ -14,16 +16,16 @@ function setCartItems(items) {
   window.dispatchEvent(new Event("cart-updated"));
 }
 
-export function addToCart(id, quantity = 1) {
+export function addToCart(product, quantity = 1) {
   const current = getCartItems();
-  const existing = current.find((item) => item.id === id);
+  const existing = current.find((item) => item.id === product.id);
   let updated;
   if (existing) {
     updated = current.map((item) =>
-      item.id === id ? { ...item, quantity: item.quantity + quantity } : item
+      item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
     );
   } else {
-    updated = [...current, { id, quantity }];
+    updated = [...current, { id: product.id, quantity, name: product.name, price: product.price, discountPrice: product.discountPrice, images: product.images, category: product.category }];
   }
   setCartItems(updated);
   return updated;

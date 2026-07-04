@@ -1,46 +1,45 @@
 const WISHLIST_KEY = "wishlist";
 const COOKIE_MAX_AGE = 31536000;
 
-export function getWishlistIds() {
+export function getWishlistItems() {
   if (typeof document === "undefined") return [];
   const saved = document.cookie
     .split("; ")
     .find((c) => c.startsWith(`${WISHLIST_KEY}=`));
-  return saved ? JSON.parse(saved.split("=")[1]) : [];
+  if (!saved) return [];
+  const parsed = JSON.parse(saved.split("=")[1]);
+  return parsed.map((item) => typeof item === "string" ? { id: item } : item);
 }
 
-export function setWishlistIds(ids) {
-  document.cookie = `${WISHLIST_KEY}=${JSON.stringify(ids)}; path=/; max-age=${COOKIE_MAX_AGE}`;
+function setWishlistItems(items) {
+  document.cookie = `${WISHLIST_KEY}=${JSON.stringify(items)}; path=/; max-age=${COOKIE_MAX_AGE}`;
   window.dispatchEvent(new Event("wishlist-updated"));
 }
 
-export function addToWishlist(id) {
-  const current = getWishlistIds();
-  if (!current.includes(id)) {
-    setWishlistIds([...current, id]);
+export function toggleWishlistItem(product) {
+  const current = getWishlistItems();
+  const existing = current.find((item) => item.id === product.id);
+  let updated;
+  if (existing) {
+    updated = current.filter((item) => item.id !== product.id);
+  } else {
+    updated = [...current, { id: product.id, name: product.name, price: product.price, discountPrice: product.discountPrice, images: product.images, category: product.category, tags: product.tags }];
   }
-}
-
-export function removeFromWishlist(id) {
-  const updated = getWishlistIds().filter((wid) => wid !== id);
-  setWishlistIds(updated);
-}
-
-export function toggleWishlistItem(id) {
-  const current = getWishlistIds();
-  const updated = current.includes(id)
-    ? current.filter((wid) => wid !== id)
-    : [...current, id];
-  setWishlistIds(updated);
+  setWishlistItems(updated);
   return updated;
 }
 
+export function removeFromWishlist(id) {
+  const updated = getWishlistItems().filter((item) => item.id !== id);
+  setWishlistItems(updated);
+}
+
 export function isInWishlist(id) {
-  return getWishlistIds().includes(id);
+  return getWishlistItems().some((item) => item.id === id);
 }
 
 export function getWishlistCount() {
-  return getWishlistIds().length;
+  return getWishlistItems().length;
 }
 
 export function onWishlistUpdate(callback) {
