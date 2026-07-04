@@ -19,14 +19,12 @@ const footerLinks = {
   account: [
     { name: "My Account", href: "/account" },
     { name: "Order History", href: "/account/orders" },
-    { name: "Wishlist", href: "/account/wishlist" },
     { name: "Track Order", href: "/account/orders" },
   ],
   company: [
     { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
     { name: "FAQs", href: "/faq" },
-    { name: "Careers", href: "/about#careers" },
   ],
   legal: [
     { name: "Terms & Conditions", href: "/terms" },

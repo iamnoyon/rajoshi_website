@@ -10,8 +10,17 @@ import {
   Lock,
   MapPin,
   Package,
+  Tag,
+  X,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import {
+  applyCoupon,
+  getAppliedCoupon,
+  removeCoupon,
+  calculateDiscount,
+  onCouponUpdate,
+} from "@/utils/coupon";
 
 const steps = [
   { id: 1, label: "Shipping", icon: Truck },
@@ -44,14 +53,39 @@ export default function CheckoutPage() {
     expiry: "",
     cvv: "",
   });
+  const [coupon, setCoupon] = useState(null);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponError, setCouponError] = useState("");
+
+  useEffect(() => {
+    setCoupon(getAppliedCoupon());
+    return onCouponUpdate(() => setCoupon(getAppliedCoupon()));
+  }, []);
 
   const subtotal = sampleCart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const shipping = coupon?.type === "freeshipping" ? 0 : subtotal > 50 ? 0 : 9.99;
+  const discount = calculateDiscount(coupon, subtotal);
+  const tax = (subtotal - discount) * 0.08;
+  const total = subtotal - discount + shipping + tax;
+
+  const handleApplyCoupon = () => {
+    setCouponError("");
+    const result = applyCoupon(couponCode);
+    if (result.valid) {
+      setCoupon(result);
+      setCouponCode("");
+    } else {
+      setCouponError(result.message);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    removeCoupon();
+    setCoupon(null);
+  };
 
   const handleShippingSubmit = (e) => {
     e.preventDefault();
@@ -548,11 +582,68 @@ export default function CheckoutPage() {
                   )}
                 </span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-green-600">Discount</span>
+                  <span className="font-medium text-green-600">
+                    -${discount.toFixed(2)}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Tax</span>
                 <span className="font-medium">${tax.toFixed(2)}</span>
               </div>
             </div>
+
+            {/* Coupon */}
+            <div className="mb-4 pb-4 border-b border-gray-200">
+              {coupon ? (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Tag size={14} className="text-green-600" />
+                    <span className="text-sm font-medium text-green-700">
+                      {coupon.code}
+                    </span>
+                    <span className="text-xs text-green-600">
+                      ({coupon.label})
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="text-green-600 hover:text-red-500 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => {
+                        setCouponCode(e.target.value);
+                        setCouponError("");
+                      }}
+                      onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
+                      placeholder="Coupon code"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#042A55]"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  {couponError && (
+                    <p className="text-xs text-red-500 mt-1">{couponError}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="flex justify-between">
               <span className="font-bold text-gray-900">Total</span>
               <span className="font-bold text-xl text-[#042A55]">

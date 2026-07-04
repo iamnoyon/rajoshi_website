@@ -21,7 +21,6 @@ import { getCartCount, onCartUpdate } from "@/utils/cart";
 
 const baseLinks = [
   { name: "Profile", href: "/account", icon: User },
-  { name: "Cart", href: "/cart", icon: ShoppingBag },
   { name: "Orders", href: "/account/orders", icon: Package },
   { name: "Addresses", href: "/account/addresses", icon: MapPin },
   { name: "Payment Methods", href: "/account/payment", icon: CreditCard },
@@ -70,12 +69,6 @@ export default function AccountLayout({ children }) {
 
   const accountLinks = [
     ...baseLinks,
-    {
-      name: "Wishlist",
-      href: "/account/wishlist",
-      icon: Heart,
-      count: wishlistCount,
-    },
   ];
 
   const cartLinkIndex = accountLinks.findIndex((l) => l.name === "Cart");
