@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { X, Heart, ShoppingCart, Trash2, Star } from "lucide-react";
 import products from "@/data/products.json";
 import { getWishlistIds, removeFromWishlist, onWishlistUpdate } from "@/utils/wishlist";
+import { addToCart } from "@/utils/cart";
 
 export default function WishlistDrawer({ isOpen, onClose }) {
+  const router = useRouter();
   const [wishlistIds, setWishlistIds] = useState([]);
 
   useEffect(() => {
@@ -17,6 +20,12 @@ export default function WishlistDrawer({ isOpen, onClose }) {
   const handleRemove = useCallback((id) => {
     removeFromWishlist(id);
   }, []);
+
+  const handleAddAllToCart = useCallback(() => {
+    wishlistIds.forEach((id) => addToCart(id, 1));
+    onClose();
+    router.push("/cart");
+  }, [wishlistIds, onClose, router]);
 
   const wishlistItems = products.filter((p) => wishlistIds.includes(p.id));
 
@@ -100,7 +109,12 @@ export default function WishlistDrawer({ isOpen, onClose }) {
                     </p>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <button className="p-1.5 bg-[#042A55] text-white rounded hover:bg-[#063C76] transition-colors">
+                    <button
+                      onClick={() => {
+                        addToCart(item.id, 1);
+                      }}
+                      className="p-1.5 bg-[#042A55] text-white rounded hover:bg-[#063C76] transition-colors"
+                    >
                       <ShoppingCart size={14} />
                     </button>
                     <button
@@ -115,6 +129,18 @@ export default function WishlistDrawer({ isOpen, onClose }) {
             </div>
           )}
         </div>
+
+        {wishlistItems.length > 0 && (
+          <div className="p-4 border-t border-gray-200">
+            <button
+              onClick={handleAddAllToCart}
+              className="w-full flex hover:cursor-pointer items-center justify-center gap-2 bg-[#042A55] hover:bg-[#063C76] text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              <ShoppingCart size={18} />
+              Add All to Cart
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

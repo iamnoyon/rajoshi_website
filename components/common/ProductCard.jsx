@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Star, Heart } from "lucide-react";
+import { Star, Heart, ShoppingCart, Check } from "lucide-react";
 import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import { addToCart, isInCart, onCartUpdate } from "@/utils/cart";
 import { useState, useEffect, useCallback } from "react";
 
 const badgeColors = {
@@ -12,17 +13,28 @@ const badgeColors = {
 
 export default function ProductCard({ product, variant = "grid" }) {
   const [wishlist, setWishlist] = useState([]);
+  const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
     setWishlist(getWishlistIds());
-    return onWishlistUpdate(() => setWishlist(getWishlistIds()));
-  }, []);
+    setInCart(isInCart(product.id));
+    const unsubWishlist = onWishlistUpdate(() => setWishlist(getWishlistIds()));
+    const unsubCart = onCartUpdate(() => setInCart(isInCart(product.id)));
+    return () => { unsubWishlist(); unsubCart(); };
+  }, [product.id]);
 
   const handleToggleWishlist = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
     const updated = toggleWishlistItem(product.id);
     setWishlist(updated);
+  }, [product.id]);
+
+  const handleAddToCart = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product.id);
+    setInCart(true);
   }, [product.id]);
 
   const isWishlisted = wishlist.includes(product.id);
@@ -88,15 +100,27 @@ export default function ProductCard({ product, variant = "grid" }) {
             )}
           </div>
         </div>
-        <button
-          onClick={handleToggleWishlist}
-          className="absolute top-2 right-2 hover:cursor-pointer z-10 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
-        >
-          <Heart
-            size={16}
-            className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-500"}
-          />
-        </button>
+        <div className="flex flex-col gap-1.5 absolute top-2 right-2">
+          <button
+            onClick={handleToggleWishlist}
+            className="p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+          >
+            <Heart
+              size={16}
+              className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-500"}
+            />
+          </button>
+          <button
+            onClick={handleAddToCart}
+            className="p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+          >
+            {inCart ? (
+              <Check size={16} className="text-green-500" />
+            ) : (
+              <ShoppingCart size={16} className="text-gray-500" />
+            )}
+          </button>
+        </div>
       </div>
     );
   }
@@ -153,15 +177,27 @@ export default function ProductCard({ product, variant = "grid" }) {
           </div>
         </div>
       </Link>
-      <button
-        onClick={handleToggleWishlist}
-        className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
-      >
-        <Heart
-          size={16}
-          className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-500"}
-        />
-      </button>
+      <div className="absolute top-2 right-2 flex flex-col gap-1.5 z-10">
+        <button
+          onClick={handleToggleWishlist}
+          className="p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+        >
+          <Heart
+            size={16}
+            className={isWishlisted ? "fill-red-500 text-red-500" : "text-gray-500"}
+          />
+        </button>
+        <button
+          onClick={handleAddToCart}
+          className="p-1.5 rounded-full bg-white/80 hover:bg-white transition-colors"
+        >
+          {inCart ? (
+            <Check size={16} className="text-green-500" />
+          ) : (
+            <ShoppingCart size={16} className="text-gray-500" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }

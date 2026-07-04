@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import products from "@/data/products.json";
 import { getWishlistIds, toggleWishlistItem, onWishlistUpdate } from "@/utils/wishlist";
+import { addToCart, removeFromCart, isInCart, onCartUpdate } from "@/utils/cart";
 import ProductCard from "@/components/common/ProductCard";
 
 const reviews = [
@@ -56,14 +57,17 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [wishlist, setWishlist] = useState([]);
+  const [inCart, setInCart] = useState(false);
 
   const product = products.find((p) => p.id === Number(params.id)) || products[0];
 
   useEffect(() => {
     setWishlist(getWishlistIds());
-    const unsubscribe = onWishlistUpdate(() => setWishlist(getWishlistIds()));
-    return unsubscribe;
-  }, []);
+    setInCart(isInCart(product.id));
+    const unsubWishlist = onWishlistUpdate(() => setWishlist(getWishlistIds()));
+    const unsubCart = onCartUpdate(() => setInCart(isInCart(product.id)));
+    return () => { unsubWishlist(); unsubCart(); };
+  }, [product.id]);
   const relatedProducts = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 
   return (
@@ -234,9 +238,24 @@ export default function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-3 mb-6">
-            <button className="flex-1 flex items-center justify-center gap-2 bg-[#042A55] hover:bg-[#063C76] text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <button
+              onClick={() => {
+                if (inCart) {
+                  removeFromCart(product.id);
+                  setInCart(false);
+                } else {
+                  addToCart(product.id, quantity);
+                  setInCart(true);
+                }
+              }}
+              className={`flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-6 rounded-lg transition-colors ${
+                inCart
+                  ? "bg-red-500 hover:bg-red-600 text-white"
+                  : "bg-[#042A55] hover:bg-[#063C76] text-white"
+              }`}
+            >
               <ShoppingCart size={20} />
-              Add to Cart
+              {inCart ? "Remove from Cart" : "Add to Cart"}
             </button>
             <button
               onClick={() => toggleWishlistItem(product.id)}

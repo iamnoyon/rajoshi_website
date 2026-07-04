@@ -17,6 +17,7 @@ import { useLogoutMutation } from "@/store/public/auth";
 import { useSelector, useDispatch } from "react-redux";
 import { clearUser } from "@/store/user";
 import { getWishlistCount, onWishlistUpdate } from "@/utils/wishlist";
+import { getCartCount, onCartUpdate } from "@/utils/cart";
 
 const baseLinks = [
   { name: "Profile", href: "/account", icon: User },
@@ -34,10 +35,14 @@ export default function AccountLayout({ children }) {
   const user = useSelector((state) => state.user);
   const [Logout] = useLogoutMutation();
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     setWishlistCount(getWishlistCount());
-    return onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+    setCartCount(getCartCount());
+    const unsubWishlist = onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+    const unsubCart = onCartUpdate(() => setCartCount(getCartCount()));
+    return () => { unsubWishlist(); unsubCart(); };
   }, []);
 
   const userName = user?.name || "User";
@@ -72,6 +77,11 @@ export default function AccountLayout({ children }) {
       count: wishlistCount,
     },
   ];
+
+  const cartLinkIndex = accountLinks.findIndex((l) => l.name === "Cart");
+  if (cartLinkIndex !== -1) {
+    accountLinks[cartLinkIndex] = { ...accountLinks[cartLinkIndex], count: cartCount };
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -110,18 +120,27 @@ export default function AccountLayout({ children }) {
                 >
                   <link.icon
                     size={18}
-                    className={link.name === "Wishlist" && wishlistCount > 0 ? "fill-red-500 text-red-500" : ""}
+                    className={
+                      (link.name === "Wishlist" && wishlistCount > 0) ||
+                      (link.name === "Cart" && cartCount > 0)
+                        ? link.name === "Wishlist"
+                          ? "fill-red-500 text-red-500"
+                          : "text-[#042A55]"
+                        : ""
+                    }
                   />
                   {link.name}
-                  {link.name === "Wishlist" && wishlistCount > 0 && (
+                  {link.count > 0 && (
                     <span
                       className={`ml-auto text-xs font-medium px-1.5 py-0.5 rounded-full ${
                         pathname === link.href
                           ? "bg-white/20 text-white"
-                          : "bg-red-100 text-red-600"
+                          : link.name === "Wishlist"
+                          ? "bg-red-100 text-red-600"
+                          : "bg-blue-100 text-[#042A55]"
                       }`}
                     >
-                      {wishlistCount}
+                      {link.count}
                     </span>
                   )}
                 </Link>

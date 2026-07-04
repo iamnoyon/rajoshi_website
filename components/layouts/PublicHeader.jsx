@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { getWishlistCount, onWishlistUpdate } from "@/utils/wishlist";
+import { getCartCount, onCartUpdate } from "@/utils/cart";
 import { useSelector } from "react-redux";
 
 const navLinks = [
@@ -29,12 +30,16 @@ export default function PublicHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const user = useSelector((state) => state.user);
   
   useEffect(() => {
     setWishlistCount(getWishlistCount());
-    return onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+    setCartCount(getCartCount());
+    const unsubWishlist = onWishlistUpdate(() => setWishlistCount(getWishlistCount()));
+    const unsubCart = onCartUpdate(() => setCartCount(getCartCount()));
+    return () => { unsubWishlist(); unsubCart(); };
   }, []);
 
   return (
@@ -152,11 +157,13 @@ export default function PublicHeader() {
               href="/cart"
               className="flex flex-col items-center gap-0.5 p-2 hover:text-[#042A55] rounded-lg relative"
             >
-              <ShoppingBag size={20} />
+              <ShoppingBag size={20} className={cartCount > 0 ? "text-[#042A55]" : ""} />
               <span className="text-[10px]">Cart</span>
-              <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                2
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>
