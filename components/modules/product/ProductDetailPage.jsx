@@ -57,6 +57,7 @@ export default function ProductDetailPage() {
   const {data: categoryProducts} = useGetProductsByCategoryQuery({categoryId: productDetails?.data?.category?.id}, { skip: !productDetails?.data?.category?.id });
 
   const product = productDetails?.data;
+  const checkoutUrl = "/checkout";
   const originalPrice = formatPrice(product?.price);
   const price = formatPrice(product?.discountPrice || product?.price);
   const reviews = product?.reviews || [];
@@ -213,7 +214,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Buy Now */}
-          <button onClick={() => { addToCart(product.id, quantity); router.push("/checkout"); }} className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
+          <button onClick={() => { addToCart(product.id, quantity); router.push(checkoutUrl); }} className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
             Buy Now
           </button>
 
