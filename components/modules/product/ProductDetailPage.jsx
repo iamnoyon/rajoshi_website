@@ -3,7 +3,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Star,
@@ -43,6 +43,7 @@ const tagColors = {
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id;
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState(0);
@@ -56,8 +57,8 @@ export default function ProductDetailPage() {
   const {data: categoryProducts} = useGetProductsByCategoryQuery({categoryId: productDetails?.data?.category?.id}, { skip: !productDetails?.data?.category?.id });
 
   const product = productDetails?.data;
-  const price = formatPrice(product?.price);
-  const originalPrice = formatPrice(product?.discountPrice || product?.price);
+  const originalPrice = formatPrice(product?.price);
+  const price = formatPrice(product?.discountPrice || product?.price);
   const reviews = product?.reviews || [];
   const reviewsCount = reviews.length || 0;
   const tag = product?.tags || "";
@@ -160,7 +161,7 @@ export default function ProductDetailPage() {
           {price != null && (
             <div className="flex items-center gap-3 mb-6">
               <span className="text-3xl font-bold text-[#042A55]">${price}</span>
-              {originalPrice != null && price !== originalPrice && (
+              {product?.discountPrice && (
                 <>
                   <span className="text-xl text-gray-400 line-through">${originalPrice}</span>
                   <span className="bg-red-100 text-red-600 text-sm font-semibold px-2 py-0.5 rounded">{Math.round(((parseFloat(originalPrice) - parseFloat(price)) / parseFloat(originalPrice)) * 100)}% OFF</span>
@@ -212,7 +213,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Buy Now */}
-          <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
+          <button onClick={() => { addToCart(product.id, quantity); router.push("/checkout"); }} className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
             Buy Now
           </button>
 

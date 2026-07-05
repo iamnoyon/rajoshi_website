@@ -2,24 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, ChevronRight, Tag, X } from "lucide-react";
+import { ShoppingBag, ChevronRight } from "lucide-react";
 import { getCartItems, onCartUpdate } from "@/utils/cart";
 import { useGetProductsByMultipleIdsQuery } from "@/store/public/products";
-import { applyCoupon, getAppliedCoupon, removeCoupon, calculateDiscount, onCouponUpdate } from "@/utils/coupon";
 import CartItem from "@/components/common/CartItem";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const [coupon, setCoupon] = useState(null);
-  const [couponCode, setCouponCode] = useState("");
-  const [couponError, setCouponError] = useState("");
 
   useEffect(() => {
     setCartItems(getCartItems());
-    setCoupon(getAppliedCoupon());
     const unsubCart = onCartUpdate(() => setCartItems(getCartItems()));
-    const unsubCoupon = onCouponUpdate(() => setCoupon(getAppliedCoupon()));
-    return () => { unsubCart(); unsubCoupon(); };
+    return () => { unsubCart(); };
   }, []);
 
   const ids = cartItems.map((item) => item.id);
@@ -37,25 +31,8 @@ export default function CartPage() {
     const price = parseFloat(item.discountPrice || item.price) || 0;
     return sum + price * item.quantity;
   }, 0);
-  const shipping = coupon?.type === "freeshipping" ? 0 : subtotal > 50 ? 0 : 9.99;
-  const discount = calculateDiscount(coupon, subtotal);
-  const total = subtotal - discount + shipping;
-
-  const handleApplyCoupon = () => {
-    setCouponError("");
-    const result = applyCoupon(couponCode);
-    if (result.valid) {
-      setCoupon(result);
-      setCouponCode("");
-    } else {
-      setCouponError(result.message);
-    }
-  };
-
-  const handleRemoveCoupon = () => {
-    removeCoupon();
-    setCoupon(null);
-  };
+  const shipping = subtotal > 50 ? 0 : 9.99;
+  const total = subtotal + shipping;
 
   if (itemCount === 0) {
     return (
@@ -113,45 +90,6 @@ export default function CartPage() {
                 <span className="font-medium">{shipping === 0 ? <span className="text-green-600">Free</span> : `$${shipping.toFixed(2)}`}</span>
               </div>
             </div>
-
-            <div className="mb-4">
-              {coupon ? (
-                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <Tag size={14} className="text-green-600" />
-                    <span className="text-sm font-medium text-green-700">{coupon.code}</span>
-                    <span className="text-xs text-green-600">({coupon.label})</span>
-                  </div>
-                  <button onClick={handleRemoveCoupon} className="text-green-600 hover:text-red-500 transition-colors">
-                    <X size={14} />
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) => { setCouponCode(e.target.value); setCouponError(""); }}
-                      onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
-                      placeholder="Coupon code"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#042A55]"
-                    />
-                    <button onClick={handleApplyCoupon} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors">
-                      Apply
-                    </button>
-                  </div>
-                  {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
-                </div>
-              )}
-            </div>
-
-            {discount > 0 && (
-              <div className="flex justify-between text-sm mb-3">
-                <span className="text-green-600">Discount</span>
-                <span className="font-medium text-green-600">-${discount.toFixed(2)}</span>
-              </div>
-            )}
 
             <div className="border-t border-gray-200 pt-4 mb-6">
               <div className="flex justify-between">
