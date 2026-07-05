@@ -45,12 +45,16 @@ function ShopContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
-  useEffect(() => {
-    if (urlCategory) setSelectedCategory(urlCategory);
-  }, [urlCategory]);
-
   const { data: categoryData } = useGetCategoryListQuery();
   const categoryFilters = ["All", ...(categoryData?.data?.map((c) => c.name) || [])];
+
+  useEffect(() => {
+    if (urlCategory && categoryData?.data) {
+      const matched = categoryData.data.find((c) => c.slug === urlCategory);
+      if (matched) setSelectedCategory(matched.name);
+      else setSelectedCategory("All");
+    }
+  }, [urlCategory, categoryData]);
 
   const queryParams = {};
   if (sortBy === "price_asc") { queryParams.sortBy = "price"; queryParams.order = "asc"; }
