@@ -23,6 +23,7 @@ import {
 } from "@/utils/coupon";
 import { getCartItems, onCartUpdate } from "@/utils/cart";
 import { useValidateCouponeMutation } from "@/store/public/coupone";
+import { useCreateOrderMutation, useMakePaymentMutation } from "@/store/public/order";
 
 const steps = [
   { id: 1, label: "Shipping", icon: Truck },
@@ -64,10 +65,10 @@ export default function CheckoutPage() {
       return () => { unsubCart(); };
     }, []);
 
-    console.log(checkoutItems);
-
   // api calls
   const [ValidateCoupone] = useValidateCouponeMutation()
+  const [CreateOrder] = useCreateOrderMutation()
+  const [MakePayment] = useMakePaymentMutation()
 
   useEffect(() => {
     setCoupon(getAppliedCoupon());
@@ -124,7 +125,35 @@ export default function CheckoutPage() {
 
   const handleShippingSubmit = (e) => {
     e.preventDefault();
-    setCurrentStep(2);
+
+    const formData = new FormData(e.target);
+    const deliveryMethod = formData.get("shipping") || "";
+
+    const orderData = {
+      items: checkoutItems.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+      couponCode: couponCode || "",
+      shippingAddress: shippingForm,
+      billingAddress: shippingForm,
+      deliveryMethod,
+      paymentMethod: "sslcommerz",
+    };
+
+    CreateOrder(orderData)
+    .unwrap()
+    .then((res)=>{
+      if(res?.success){
+        MakePayment({id: res?.data?.id, data: {method: "sslcommerz"}})
+        .unwrap()
+        .then((res)=>{
+          if(res?.success){
+            window.location.href = res?.data?.url;
+          }
+        })
+      }
+    })
   };
 
   const handlePaymentSubmit = (e) => {
