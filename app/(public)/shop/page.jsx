@@ -124,8 +124,8 @@ function ShopContent() {
             <div>
               <h3 className="font-semibold text-sm text-gray-900 mb-3">Category</h3>
               <div className="space-y-1">
-                {categoryFilters.map((cat) => (
-                  <button key={cat} onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }} className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedCategory === cat ? "bg-[#042A55] text-white" : "text-gray-600 hover:bg-gray-100"}`}>
+                {categoryFilters.map((cat, inx) => (
+                  <button key={inx} onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }} className={`block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${selectedCategory === cat ? "bg-[#042A55] text-white" : "text-gray-600 hover:bg-gray-100"}`}>
                     {cat}
                   </button>
                 ))}

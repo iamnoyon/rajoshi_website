@@ -21,6 +21,8 @@ import {
   calculateDiscount,
   onCouponUpdate,
 } from "@/utils/coupon";
+import { useValidateCouponeMutation } from "@/store/public/coupone";
+import { getCartItems, onCartUpdate } from "@/utils/cart";
 
 const steps = [
   { id: 1, label: "Shipping", icon: Truck },
@@ -57,6 +59,19 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState("");
 
+  const [checkoutItems, setCheckoutItems] = useState([]);
+  
+    useEffect(() => {
+      setCheckoutItems(getCartItems());
+      const unsubCart = onCartUpdate(() => setCheckoutItems(getCartItems()));
+      return () => { unsubCart(); };
+    }, []);
+
+    console.log(checkoutItems);
+
+  // api calls
+  const [ValidateCoupone] = useValidateCouponeMutation()
+
   useEffect(() => {
     setCoupon(getAppliedCoupon());
     return onCouponUpdate(() => setCoupon(getAppliedCoupon()));
@@ -72,14 +87,19 @@ export default function CheckoutPage() {
   const total = subtotal - discount + shipping + tax;
 
   const handleApplyCoupon = () => {
-    setCouponError("");
-    const result = applyCoupon(couponCode);
-    if (result.valid) {
-      setCoupon(result);
-      setCouponCode("");
-    } else {
-      setCouponError(result.message);
-    }
+    const items = checkoutItems?.map(item=> {
+      return {
+        productId: item.id,
+        quantity: item.quantity
+      }
+    })
+    
+    ValidateCoupone({
+      items: items,
+      couponCode: couponCode
+    })
+
+    console.log(items);
   };
 
   const handleRemoveCoupon = () => {
