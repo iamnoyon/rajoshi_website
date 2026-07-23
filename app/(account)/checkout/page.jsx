@@ -21,18 +21,13 @@ import {
   calculateDiscount,
   onCouponUpdate,
 } from "@/utils/coupon";
-import { useValidateCouponeMutation } from "@/store/public/coupone";
 import { getCartItems, onCartUpdate } from "@/utils/cart";
+import { useValidateCouponeMutation } from "@/store/public/coupone";
 
 const steps = [
   { id: 1, label: "Shipping", icon: Truck },
   { id: 2, label: "Payment", icon: CreditCard },
   { id: 3, label: "Confirmation", icon: CheckCircle },
-];
-
-const sampleCart = [
-  { id: 1, name: "Wireless Headphones", price: 79.99, quantity: 1, color: "Black" },
-  { id: 2, name: "Smart Watch Pro", price: 199.99, quantity: 2, color: "Silver" },
 ];
 
 export default function CheckoutPage() {
@@ -58,6 +53,8 @@ export default function CheckoutPage() {
   const [coupon, setCoupon] = useState(null);
   const [couponCode, setCouponCode] = useState("");
   const [couponError, setCouponError] = useState("");
+  const [couponData, setCouponData] = useState(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
   const [checkoutItems, setCheckoutItems] = useState([]);
   
@@ -77,34 +74,52 @@ export default function CheckoutPage() {
     return onCouponUpdate(() => setCoupon(getAppliedCoupon()));
   }, []);
 
-  const subtotal = sampleCart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  const baseSubtotal = checkoutItems.reduce(
+    (sum, item) => sum + (Number(item.price) || 0) * item.quantity,
     0
   );
+  const subtotal = couponData ? couponData.subtotal : baseSubtotal;
   const shipping = coupon?.type === "freeshipping" ? 0 : subtotal > 50 ? 0 : 9.99;
-  const discount = calculateDiscount(coupon, subtotal);
+  const discount = couponData ? couponData.discount : calculateDiscount(coupon, baseSubtotal);
   const tax = (subtotal - discount) * 0.08;
-  const total = subtotal - discount + shipping + tax;
+  const total = couponData ? couponData.total : subtotal - discount + shipping + tax;
 
-  const handleApplyCoupon = () => {
-    const items = checkoutItems?.map(item=> {
-      return {
-        productId: item.id,
-        quantity: item.quantity
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    const items = checkoutItems?.map(item => ({
+      productId: item.id,
+      quantity: item.quantity
+    }));
+
+    setCouponLoading(true);
+    setCouponError("");
+
+    try {
+      const response = await ValidateCoupone({
+        items,
+        couponCode: couponCode.trim()
+      }).unwrap();
+
+      if (response?.success && response?.data) {
+        setCouponData(response.data);
+        applyCoupon(couponCode.trim());
+        setCoupon(getAppliedCoupon());
+      } else {
+        setCouponError(response?.message || "Invalid coupon code");
       }
-    })
-    
-    ValidateCoupone({
-      items: items,
-      couponCode: couponCode
-    })
-
-    console.log(items);
+    } catch (err) {
+      setCouponError(err?.data?.message || "Failed to apply coupon");
+    } finally {
+      setCouponLoading(false);
+    }
   };
 
   const handleRemoveCoupon = () => {
     removeCoupon();
     setCoupon(null);
+    setCouponData(null);
+    setCouponCode("");
   };
 
   const handleShippingSubmit = (e) => {
@@ -366,22 +381,15 @@ export default function CheckoutPage() {
                   <div className="space-y-2">
                     {[
                       {
-                        id: "standard",
-                        name: "Standard Shipping",
+                        id: "COD",
+                        name: "Cash on Delivery (COD)",
                         time: "5-7 business days",
-                        price: subtotal > 50 ? "Free" : "$9.99",
+                        // price: subtotal > 50 ? "Free" : "$9.99",
                       },
                       {
-                        id: "express",
-                        name: "Express Shipping",
+                        id: "OP",
+                        name: "Online Payment",
                         time: "2-3 business days",
-                        price: "$19.99",
-                      },
-                      {
-                        id: "overnight",
-                        name: "Overnight Shipping",
-                        time: "1 business day",
-                        price: "$39.99",
                       },
                     ].map((method) => (
                       <label
@@ -399,11 +407,8 @@ export default function CheckoutPage() {
                           <p className="text-sm font-medium text-gray-900">
                             {method.name}
                           </p>
-                          <p className="text-xs text-gray-500">{method.time}</p>
+                          <p className="text-xs text-gray-500">{method?.time}</p>
                         </div>
-                        <span className="text-sm font-semibold text-[#042A55]">
-                          {method.price}
-                        </span>
                       </label>
                     ))}
                   </div>
@@ -576,16 +581,29 @@ export default function CheckoutPage() {
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 sticky top-24">
             <h3 className="font-bold text-gray-900 mb-4">Order Summary</h3>
             <div className="space-y-3 mb-4 pb-4 border-b border-gray-200">
-              {sampleCart.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span className="text-gray-600 truncate mr-2">
-                    {item.name} x{item.quantity}
-                  </span>
-                  <span className="font-medium whitespace-nowrap">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </span>
-                </div>
-              ))}
+              {couponData ? (
+                couponData.items.map((item) => (
+                  <div key={item.productId} className="flex justify-between text-sm">
+                    <span className="text-gray-600 truncate mr-2">
+                      {item.name} x{item.quantity}
+                    </span>
+                    <span className="font-medium whitespace-nowrap">
+                      ${item.lineTotal.toFixed(2)}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                checkoutItems.map((item) => (
+                  <div key={item.id} className="flex justify-between text-sm">
+                    <span className="text-gray-600 truncate mr-2">
+                      {item.name} x{item.quantity}
+                    </span>
+                    <span className="font-medium whitespace-nowrap">
+                      ${((Number(item.price) || 0) * item.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                ))
+              )}
             </div>
             <div className="space-y-2 mb-4 pb-4 border-b border-gray-200">
               <div className="flex justify-between text-sm">
@@ -618,7 +636,27 @@ export default function CheckoutPage() {
 
             {/* Coupon */}
             <div className="mb-4 pb-4 border-b border-gray-200">
-              {coupon ? (
+              {couponData ? (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Tag size={14} className="text-green-600" />
+                    <span className="text-sm font-medium text-green-700">
+                      {couponData.coupon}
+                    </span>
+                    {coupon?.label && (
+                      <span className="text-xs text-green-600">
+                        ({coupon.label})
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleRemoveCoupon}
+                    className="text-green-600 hover:text-red-500 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : coupon ? (
                 <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
                   <div className="flex items-center gap-2">
                     <Tag size={14} className="text-green-600" />
@@ -652,9 +690,10 @@ export default function CheckoutPage() {
                     />
                     <button
                       onClick={handleApplyCoupon}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors"
+                      disabled={couponLoading}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
                     >
-                      Apply
+                      {couponLoading ? "Applying..." : "Apply"}
                     </button>
                   </div>
                   {couponError && (

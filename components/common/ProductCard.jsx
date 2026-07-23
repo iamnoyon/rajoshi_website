@@ -56,9 +56,9 @@ export default function ProductCard({ product, variant = "grid" }) {
   const handleAddToCart = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product.id);
+    addToCart(product.id, 1, product.name, product.discountPrice ?? product.price);
     setInCart(true);
-  }, [product.id]);
+  }, [product.id, product.name, product.discountPrice, product.price]);
 
   const isWishlisted = wishlist.includes(product.id);
   const categoryName = getCategoryName(product.category);

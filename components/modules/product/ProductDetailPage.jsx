@@ -201,7 +201,7 @@ export default function ProductDetailPage() {
 
           {/* Action Buttons */}
           <div className="flex gap-3 mb-6">
-            <button onClick={() => { if (inCart) { removeFromCart(product.id); setInCart(false); } else { addToCart(product.id, quantity); setInCart(true); } }} className={`flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-6 rounded-lg transition-colors ${inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-[#042A55] hover:bg-[#063C76] text-white"}`}>
+            <button onClick={() => { if (inCart) { removeFromCart(product.id); setInCart(false); } else { addToCart(product.id, quantity, product.name, product.discountPrice || product.price); setInCart(true); } }} className={`flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-6 rounded-lg transition-colors ${inCart ? "bg-red-500 hover:bg-red-600 text-white" : "bg-[#042A55] hover:bg-[#063C76] text-white"}`}>
               <ShoppingCart size={20} />
               {inCart ? "Remove from Cart" : "Add to Cart"}
             </button>
@@ -214,7 +214,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Buy Now */}
-          <button onClick={() => { addToCart(product.id, quantity); router.push(checkoutUrl); }} className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
+          <button onClick={() => { addToCart(product.id, quantity, product.name, product.discountPrice || product.price); router.push(checkoutUrl); }} className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-6">
             Buy Now
           </button>
 

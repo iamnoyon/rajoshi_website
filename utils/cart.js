@@ -14,7 +14,7 @@ function setCartItems(items) {
   window.dispatchEvent(new Event("cart-updated"));
 }
 
-export function addToCart(id, quantity = 1) {
+export function addToCart(id, quantity = 1, name = "", price = 0) {
   const current = getCartItems();
   const existing = current.find((item) => item.id === id);
   let updated;
@@ -23,7 +23,7 @@ export function addToCart(id, quantity = 1) {
       item.id === id ? { ...item, quantity: item.quantity + quantity } : item
     );
   } else {
-    updated = [...current, { id, quantity }];
+    updated = [...current, { id, quantity, name, price }];
   }
   setCartItems(updated);
   return updated;

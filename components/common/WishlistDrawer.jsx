@@ -38,7 +38,7 @@ export default function WishlistDrawer({ isOpen, onClose }) {
   }, []);
 
   const handleAddAllToCart = useCallback(() => {
-    products.forEach((p) => addToCart(p.id, 1));
+    products.forEach((p) => addToCart(p.id, 1, p.name, p.discountPrice || p.price));
     onClose();
     router.push("/cart");
   }, [products, onClose, router]);
@@ -85,7 +85,7 @@ export default function WishlistDrawer({ isOpen, onClose }) {
                     <p className="font-bold text-[#042A55] text-sm mt-0.5">${parseFloat(product.discountPrice || product.price).toFixed(2)}</p>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <button onClick={() => addToCart(product.id, 1)} className="p-1.5 bg-[#042A55] text-white rounded hover:bg-[#063C76] transition-colors">
+                    <button onClick={() => addToCart(product.id, 1, product.name, product.discountPrice || product.price)} className="p-1.5 bg-[#042A55] text-white rounded hover:bg-[#063C76] transition-colors">
                       <ShoppingCart size={14} />
                     </button>
                     <button onClick={() => handleRemove(product.id)} className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors">

@@ -10,9 +10,15 @@ const couponeSlice = apiSlice.injectEndpoints({
                 body: data
             }),
         }),
+        availableCoupone: builder.query({
+            query: () => ({
+                url: '/coupons/available',
+                method: 'GET',
+            }),
+        }),
 
     }),
     overrideExisting: true
 });
 
-export const { useValidateCouponeMutation } = couponeSlice
+export const { useValidateCouponeMutation, useAvailableCouponeQuery } = couponeSlice
